@@ -9,7 +9,10 @@ namespace X {
 	Timer::Timer() : 
 		m_lastDeltaTime(std::chrono::high_resolution_clock::now()), 
 		m_lastFPSTime(std::chrono::high_resolution_clock::now()), 
-		deltaTime(0.0f)
+		frameStart(std::chrono::high_resolution_clock::now()),
+		deltaTime(0.0f),
+		m_fps(0),
+		m_frameCount(0)
 	{}
 
 	void Timer::Update()
@@ -35,7 +38,7 @@ namespace X {
 	{
 		if (maxFps < 1) return;
 
-		auto frameStart = std::chrono::high_resolution_clock::now();
+		frameStart = std::chrono::high_resolution_clock::now();
 	}
 
 	void Timer::FrameEnd(int maxFps)

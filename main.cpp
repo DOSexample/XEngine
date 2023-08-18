@@ -57,14 +57,13 @@ wWinMain(
     cameraMain.AddComponent<X::Camera>();
     scene.AddGameObject(&cameraMain);
 
-    dxmesh.transform->SetParent(cameraMain.transform);
-
     // Main application loop.
     while (msg.message != WM_QUIT)
     {
 
         if (!window.ProcessMessages(&msg))
         {
+            X::Time.Update();
             X::Time.FrameStart(maxFps);
             {
                 scene.Update();
@@ -83,7 +82,6 @@ wWinMain(
                 }
 
             }
-            X::Time.Update();
             X::Time.FrameEnd(maxFps);
         }
 
