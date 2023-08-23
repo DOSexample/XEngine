@@ -114,8 +114,6 @@ void XSkinMesh::Draw(XAnimationMotion* anim)
 	auto device = &XDevice::Instance();
 
     XAnimationMotion* xa = nullptr;
-    static float cFrame = 0;
-
     XShader* xs = nullptr;
 
     if (anim && anim->mFrameNum > 0 && anim->mBoneNum > 0) {

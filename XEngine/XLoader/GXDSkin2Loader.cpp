@@ -23,7 +23,7 @@ void DebugA(const char* _Format,...)
 }
 
 /// <summary>
-/// LoadSkin2Chunck
+/// LoadSkin2Data
 /// </summary>
 namespace {
 

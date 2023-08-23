@@ -20,7 +20,7 @@ int WINAPI WinMain(
     auto& xEngine = XEngine::Instance();
     XCamera xCam;
 
-    if (!xWin32.Initialize(hInstance, "Viewer", 1024, 768))
+    if (!xWin32.Initialize(hInstance, "XEngine", 1024, 768))
     {
         return xWin32.MessageBoxA("!XWin32::Initialize()", BUTTON_OK_AND_ICON_ERROR);
     }
@@ -29,7 +29,7 @@ int WINAPI WinMain(
 
     if (!xEngine.Initialize(xWin32.GetHWND(), xWin32.GetWidth(), xWin32.GetHeight()))
     {
-        return xWin32.MessageBoxA("!xd3d9::Initialize()", BUTTON_OK_AND_ICON_ERROR);
+        return xWin32.MessageBoxA("!XEngine::Initialize()", BUTTON_OK_AND_ICON_ERROR);
     }
     xCam.Initialize( xWin32.GetWidth(), xWin32.GetHeight(), 45.0f, 1.0f, 10000.0f );
     xEngine.SetCamera(&xCam);
@@ -63,17 +63,17 @@ int WINAPI WinMain(
         skin2.Load("SObject\\TwelveSky2\\C001002001.SOBJECT", &face);
         skin2.Load("SObject\\TwelveSky2\\C001003001.SOBJECT", &body);
         skin2.Load("SObject\\TwelveSky2\\C001004001.SOBJECT", &foot);
-        //
-        //    //skin2.Load( "SObject\\Troy vs Sparta\\FC_102_100_001.SOBJECT", &hair);
-        //    skin2.Load( "SObject\\Troy vs Sparta\\FC_101_101_001.SOBJECT", &face);
-        //    skin2.Load( "SObject\\Troy vs Sparta\\FC_W_103_101_001.SOBJECT", &hair);//helmet
-        //    skin2.Load( "SObject\\Troy vs Sparta\\FC_W_104_102_001.SOBJECT", &body);
-        //    skin2.Load( "SObject\\Troy vs Sparta\\FC_W_105_101_001.SOBJECT", &arm);//arm
-        //    skin2.Load( "SObject\\Troy vs Sparta\\FC_W_106_101_001.SOBJECT", &foot);
-        //
-        //    skin2.Load("SObject\\WarenStory\\C001002001.SOBJECT", &hair);
-        //    skin2.Load("SObject\\WarenStory\\C001003001.SOBJECT", &face);
-        //    skin2.Load("SObject\\WarenStory\\C001008001.SOBJECT", &body);
+
+    //    //skin2.Load( "SObject\\Troy vs Sparta\\FC_102_100_001.SOBJECT", &hair);
+    //    skin2.Load("SObject\\Troy vs Sparta\\FC_101_101_001.SOBJECT", &face);
+    //    skin2.Load("SObject\\Troy vs Sparta\\FC_W_103_101_001.SOBJECT", &hair);//helmet
+    //    skin2.Load("SObject\\Troy vs Sparta\\FC_W_104_102_001.SOBJECT", &body);
+    //    skin2.Load("SObject\\Troy vs Sparta\\FC_W_105_101_001.SOBJECT", &arm);//arm
+    //    skin2.Load("SObject\\Troy vs Sparta\\FC_W_106_101_001.SOBJECT", &foot);
+    //
+    //    skin2.Load("SObject\\WarenStory\\C001002001.SOBJECT", &hair);
+    //    skin2.Load("SObject\\WarenStory\\C001003001.SOBJECT", &face);
+    //    skin2.Load("SObject\\WarenStory\\C001008001.SOBJECT", &body);
 
         vSkin.push_back(&hair);
         vSkin.push_back(&face);
@@ -108,17 +108,17 @@ int WINAPI WinMain(
             static float testFrame = 0;
             anim.mCurAnimFrame = (int)testFrame;
             testFrame += oneFrame;
-            if ( (int)testFrame >= anim.mFrameNum )
+            if ((int)testFrame >= anim.mFrameNum)
                 testFrame = 0.0f;
-        
+
             xCam.Update();
-        
+
             xEngine.Clear(ALL, Grey);
             xEngine.BeginScene();
             {
                 for (auto it = vSkin.begin(); it != vSkin.end(); ++it)
                     (*it)->Update();
-        
+
                 for (auto it = vSkin.begin(); it != vSkin.end(); ++it)
                 {
                     //Draw with animation motion

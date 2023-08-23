@@ -10,7 +10,7 @@ using namespace XSystem::IO;
 #include "../XAnimation/XAnimationMotion.h"
 
 /// <summary>
-/// LoadSkin2Base
+/// LoadMotion2Base
 /// </summary>
 namespace {
 
