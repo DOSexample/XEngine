@@ -50,6 +50,13 @@ int WINAPI WinMain(
 //    skin2.Load("SObject\\WarenStory\\C001003001.SOBJECT", &face);
 //    skin2.Load("SObject\\WarenStory\\C001008001.SOBJECT", &body);
 
+    std::vector<XSkinMesh*> vSkin = {};
+    vSkin.push_back(&hair);
+    vSkin.push_back(&face);
+    vSkin.push_back(&body);
+    vSkin.push_back(&arm);
+    vSkin.push_back(&foot);
+
     XShader common;
     {
         common.AddVertexInput("mKeyMatrix");
@@ -61,12 +68,6 @@ int WINAPI WinMain(
         printf( "common: %d\n", SUCCEEDED(common.CreateFromFile("Common", "Shaders\\Common.vs.fx", "Shaders\\Common.ps.fx") ) );
     }
 
-    std::vector<XSkinMesh*> vSkin = {};
-    vSkin.push_back( &hair );
-    vSkin.push_back( &face );
-    vSkin.push_back( &body );
-    vSkin.push_back( &arm  );
-    vSkin.push_back( &foot );
 
     MSG msg = { 0, 0 };
     while (msg.message != WM_QUIT)

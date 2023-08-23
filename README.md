@@ -44,6 +44,13 @@ XSkinMesh hair, face, body, arm, foot;
 //    skin2.Load("SObject\\WarenStory\\C001002001.SOBJECT", &hair);
 //    skin2.Load("SObject\\WarenStory\\C001003001.SOBJECT", &face);
 //    skin2.Load("SObject\\WarenStory\\C001008001.SOBJECT", &body);
+
+std::vector<XSkinMesh*> vSkin = {};
+vSkin.push_back(&hair);
+vSkin.push_back(&face);
+vSkin.push_back(&body);
+vSkin.push_back(&arm);
+vSkin.push_back(&foot);
 ```
 
 5.Load and Compile Shader
