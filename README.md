@@ -26,12 +26,23 @@ xEngine.SetCamera(&xCam);
 4.Load Skin
 ```
 XLoader::GXDSkin2Loader skin2;
-XSkinMesh hair, face, body, foot;
+XSkinMesh hair, face, body, arm, foot;
 
-skin2.Load( "SObject\\C001001001.SOBJECT", &hair);
-skin2.Load( "SObject\\C001002001.SOBJECT", &face);
-skin2.Load( "SObject\\C001003001.SOBJECT", &body);
-skin2.Load( "SObject\\C001004001.SOBJECT", &foot);
+//    skin2.Load( "SObject\\TwelveSky2\\C001001001.SOBJECT", &hair);
+//    skin2.Load( "SObject\\TwelveSky2\\C001002001.SOBJECT", &face);
+//    skin2.Load( "SObject\\TwelveSky2\\C001003001.SOBJECT", &body);
+//    skin2.Load( "SObject\\TwelveSky2\\C001004001.SOBJECT", &foot);
+//
+//    //skin2.Load( "SObject\\Troy vs Sparta\\FC_102_100_001.SOBJECT", &hair);
+//    skin2.Load( "SObject\\Troy vs Sparta\\FC_101_101_001.SOBJECT", &face);
+//    skin2.Load( "SObject\\Troy vs Sparta\\FC_W_103_101_001.SOBJECT", &hair);//helmet
+//    skin2.Load( "SObject\\Troy vs Sparta\\FC_W_104_102_001.SOBJECT", &body);
+//    skin2.Load( "SObject\\Troy vs Sparta\\FC_W_105_101_001.SOBJECT", &arm);//arm
+//    skin2.Load( "SObject\\Troy vs Sparta\\FC_W_106_101_001.SOBJECT", &foot);
+//
+//    skin2.Load("SObject\\WarenStory\\C001002001.SOBJECT", &hair);
+//    skin2.Load("SObject\\WarenStory\\C001003001.SOBJECT", &face);
+//    skin2.Load("SObject\\WarenStory\\C001008001.SOBJECT", &body);
 ```
 
 5.Load and Compile Shader
@@ -84,4 +95,6 @@ while (msg.message != WM_QUIT)
 }
 ```
 
-![Alt text](/Screenshot_0.png?raw=true "Optional Title")
+![Alt text](/Screenshot_0.png?raw=true "TwelveSky2.5")
+![Alt text](/Screenshot_1.png?raw=true "Troy vs Spartar")
+![Alt text](/Screenshot_2.png?raw=true "Waren Story")

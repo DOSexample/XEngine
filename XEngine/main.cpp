@@ -32,12 +32,23 @@ int WINAPI WinMain(
     xEngine.SetCamera(&xCam);
 
     XLoader::GXDSkin2Loader skin2;
-    XSkinMesh hair, face, body, foot;
+    XSkinMesh hair, face, body, arm, foot;
 
-    skin2.Load( "SObject\\C001001001.SOBJECT", &hair);
-    skin2.Load( "SObject\\C001002001.SOBJECT", &face);
-    skin2.Load( "SObject\\C001003001.SOBJECT", &body);
-    skin2.Load( "SObject\\C001004001.SOBJECT", &foot);
+//    skin2.Load( "SObject\\TwelveSky2\\C001001001.SOBJECT", &hair);
+//    skin2.Load( "SObject\\TwelveSky2\\C001002001.SOBJECT", &face);
+//    skin2.Load( "SObject\\TwelveSky2\\C001003001.SOBJECT", &body);
+//    skin2.Load( "SObject\\TwelveSky2\\C001004001.SOBJECT", &foot);
+//
+//    //skin2.Load( "SObject\\Troy vs Sparta\\FC_102_100_001.SOBJECT", &hair);
+//    skin2.Load( "SObject\\Troy vs Sparta\\FC_101_101_001.SOBJECT", &face);
+//    skin2.Load( "SObject\\Troy vs Sparta\\FC_W_103_101_001.SOBJECT", &hair);//helmet
+//    skin2.Load( "SObject\\Troy vs Sparta\\FC_W_104_102_001.SOBJECT", &body);
+//    skin2.Load( "SObject\\Troy vs Sparta\\FC_W_105_101_001.SOBJECT", &arm);//arm
+//    skin2.Load( "SObject\\Troy vs Sparta\\FC_W_106_101_001.SOBJECT", &foot);
+//
+//    skin2.Load("SObject\\WarenStory\\C001002001.SOBJECT", &hair);
+//    skin2.Load("SObject\\WarenStory\\C001003001.SOBJECT", &face);
+//    skin2.Load("SObject\\WarenStory\\C001008001.SOBJECT", &body);
 
     XShader common;
     {
@@ -49,6 +60,13 @@ int WINAPI WinMain(
         common.AddPixelInput("mTexture0");
         printf( "common: %d\n", SUCCEEDED(common.CreateFromFile("Common", "Shaders\\Common.vs.fx", "Shaders\\Common.ps.fx") ) );
     }
+
+    std::vector<XSkinMesh*> vSkin = {};
+    vSkin.push_back( &hair );
+    vSkin.push_back( &face );
+    vSkin.push_back( &body );
+    vSkin.push_back( &arm  );
+    vSkin.push_back( &foot );
 
     MSG msg = { 0, 0 };
     while (msg.message != WM_QUIT)
@@ -69,15 +87,11 @@ int WINAPI WinMain(
             xEngine.Clear(ALL, Grey);
             xEngine.BeginScene();
             {
-                hair.Update();
-                face.Update();
-                body.Update();
-                foot.Update();
+                for (auto it = vSkin.begin(); it != vSkin.end(); ++it)
+                    (*it)->Update();
 
-                hair.Draw();
-                face.Draw();
-                body.Draw();
-                foot.Draw();
+                for (auto it = vSkin.begin(); it != vSkin.end(); ++it)
+                    (*it)->Draw();
             }
             xEngine.EndScene();
         }

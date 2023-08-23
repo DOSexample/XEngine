@@ -153,7 +153,7 @@ void XSkinMesh::Draw()
                     XRenderState rt;
                     XShader* xs = XShaderManager::Get("Common");
                     
-                    printf( "skin[%d] -> pDiffuseMap.Alpha: %d\r\n", i, pDiffuseMap->mAlphaModeCase );
+                    //printf( "skin[%d] -> pDiffuseMap.Alpha: %d\r\n", i, pDiffuseMap->mAlphaModeCase );
                     
                     switch ( pDiffuseMap->mAlphaModeCase )
                     {

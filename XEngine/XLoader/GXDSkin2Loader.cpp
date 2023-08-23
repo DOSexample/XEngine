@@ -9,8 +9,17 @@
 
 using namespace XSystem::IO;
 
-void DebugA(const char*,...)
+void DebugA(const char* _Format,...)
 {
+	char _Buffer[4096];
+	int _Result;
+	va_list _ArgList;
+	__crt_va_start(_ArgList, _Format);
+
+	_Result = _vsprintf_l(_Buffer, _Format, NULL, _ArgList);
+
+	__crt_va_end(_ArgList);
+	printf(_Format);
 }
 
 /// <summary>
@@ -208,6 +217,34 @@ namespace {
 		return false;
 	}
 
+	bool LoadUncompressedChunk(SkinVersion2* s, BinaryReader& br)
+	{
+		int mSkinNum = br.ReadInt();
+		if (mSkinNum > 0)
+		{
+			bool res = false;
+
+			s->mSkin.resize(mSkinNum);
+			for (int i = 0; i < mSkinNum; i++)
+			{
+				res = LoadSkinData2(br, s->mSkin[i]);
+				if (!res)
+					break;
+			}
+
+			DebugA("<< LoadUncompressedChunk::LoadSkin2Data() -> %d\r\n", res);
+
+			if (!res) {
+				delete s;
+				s = nullptr;
+			}
+
+			return res;
+		}
+
+		return false;
+	}
+
 }
 
 namespace XLoader {
@@ -236,29 +273,34 @@ namespace XLoader {
 			return res;
 		}
 
+		bool tValid = false, tCompressed = false;
 		switch ( tVersion )
 		{
-		case 3:
+		case 2://Troy vs Sparta | Waren Story
+			tValid = true;
+			break;
+		case 3://TwelveSky2.5
+			if (!LoadSkin2Extra(br, tValid, tCompressed))
+			{
+				DebugA("%s << !LoadSkin2Extra()\r\n", tFileName);
+				return res;
+			}
 			break;
 		default:
-			return res;
-		}
-
-		bool tValid, tCompressed;
-		if (!LoadSkin2Extra(br, tValid, tCompressed))
-		{
-			DebugA("%s << !LoadSkin2Extra()\r\n", tFileName);
 			return res;
 		}
 
 		if (!tValid)
 			return true;
 
+		skin->v2 = new SkinVersion2();
 		if (tCompressed) {
-			skin->v2 = new SkinVersion2();
 			res = LoadSkin2CompressChunk(skin->v2, br);
-			skin->Create2( res );
 		}
+		else {
+			res = LoadUncompressedChunk(skin->v2, br);
+		}
+		skin->Create2( res );
 
 		return res;
 	}
