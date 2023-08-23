@@ -165,7 +165,7 @@ void XSkinMesh::Draw()
                     case 1:
                         rt.EnableAlphaTest(true);
                         rt.SetAlphaTestFunc(XRenderState::AlphaTestFunc::Greater);
-                        rt.SetAlphaReferenceValue(128);//(float)128 * (float)256 = 0.5f //clip
+                        rt.SetAlphaReferenceValue(128);//128 / 255 = 0.5 //Alpha Clip (0.5)
                         //device->SetRenderState( D3DRS_ALPHATESTENABLE, TRUE );
                         //device->SetRenderState( D3DRS_ALPHAFUNC, D3DCMP_GREATER );
                         //device->SetRenderState( D3DRS_ALPHAREF, 128 );
