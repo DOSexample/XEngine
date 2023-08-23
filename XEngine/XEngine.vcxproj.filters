@@ -1,0 +1,111 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="XSystem">
+      <UniqueIdentifier>{1eefb114-20d4-4450-837d-37487041a9da}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="XSystem\IO">
+      <UniqueIdentifier>{105c08c2-bf53-4572-867c-4bd94e66042c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="XLoader">
+      <UniqueIdentifier>{bec479a7-ede2-4c26-ab90-8c73c7e0d348}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="XEngine.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="XWin32.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="XSystem\IO\BinaryReader.h">
+      <Filter>XSystem\IO</Filter>
+    </ClInclude>
+    <ClInclude Include="XSystem\IO\Zlib.h">
+      <Filter>XSystem\IO</Filter>
+    </ClInclude>
+    <ClInclude Include="XLoader\FileLoader.h">
+      <Filter>XLoader</Filter>
+    </ClInclude>
+    <ClInclude Include="XLoader\GXDSkin2Loader.h">
+      <Filter>XLoader</Filter>
+    </ClInclude>
+    <ClInclude Include="XDevice.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="XSkinMesh.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="XCamera.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="XTexture.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="XRenderState.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="XShader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="XTransform.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="XEngine.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="XWin32.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="XSystem\IO\BinaryReader.cpp">
+      <Filter>XSystem\IO</Filter>
+    </ClCompile>
+    <ClCompile Include="XSystem\IO\Zlib.cpp">
+      <Filter>XSystem\IO</Filter>
+    </ClCompile>
+    <ClCompile Include="XLoader\FileLoader.cpp">
+      <Filter>XLoader</Filter>
+    </ClCompile>
+    <ClCompile Include="XLoader\GXDSkin2Loader.cpp">
+      <Filter>XLoader</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="XDevice.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="XSkinMesh.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="XCamera.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="XTexture.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="XRenderState.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="XShader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="XTransform.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
