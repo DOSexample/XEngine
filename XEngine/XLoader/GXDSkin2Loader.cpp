@@ -19,7 +19,7 @@ void DebugA(const char* _Format,...)
 	_Result = _vsprintf_l(_Buffer, _Format, NULL, _ArgList);
 
 	__crt_va_end(_ArgList);
-	printf(_Format);
+	printf(_Buffer);
 }
 
 /// <summary>
@@ -48,9 +48,9 @@ namespace {
 		}
 
 		int mAnimationNum = br.ReadInt();
-		DebugA("<< !LoadSkin2Texture::mAnimationNum -> %d\r\n", mAnimationNum);
 		if (mAnimationNum > 0)
 		{
+			DebugA("<< LoadSkin2Texture::mAnimationNum() -> %d\r\n", mAnimationNum);
 			s.mAnimationMap.resize(mAnimationNum);
 			for (int i = 0; i < mAnimationNum; ++i)
 				if (!s.mAnimationMap[i].Load(br))
@@ -154,9 +154,7 @@ namespace {
 		}
 
 		s.mCheckValidState = LoadSkin2Vertex(br, s);
-		{
-			DebugA("<< !LoadSkin2Real::LoadSkin2Vertex()\r\n");
-		}
+		DebugA("<< LoadSkin2Real::LoadSkin2Vertex() -> %d\r\n", s.mCheckValidState);
 
 		return s.mCheckValidState;
 	}
@@ -169,8 +167,8 @@ namespace {
 
 	bool LoadSkin2Extra(BinaryReader& br, bool& tValid, bool& tCompressed)
 	{
-		char tBuffer[5];
-		return br.ReadString(tBuffer, 4) && ( tValid = tBuffer[0] > 0, tCompressed = tBuffer[1] > 0 );
+		char tBuffer[4];
+		return br.ReadBytes( tBuffer, sizeof(tBuffer) ) && ( tValid = tBuffer[0] > 0, tCompressed = tBuffer[1] > 0 );
 	}
 	bool LoadSkin2Header(BinaryReader& br, int* tVersion)
 	{
@@ -179,9 +177,28 @@ namespace {
 		return br.ReadString(tBuffer, 8) && strncmp("SOBJECT", tBuffer, 7) == 0 && ( ( *tVersion = tBuffer[7] - '0' ), *tVersion == 2 || *tVersion == 3 );
 	}
 
+	bool LoadSkin2UncompressedChunk(SkinVersion2* s, BinaryReader& br)
+	{
+		bool result = false;
+		int mSkinNum = br.ReadInt();
+		if (mSkinNum > 0)
+		{
+			s->mSkin.resize(mSkinNum);
+			for (int i = 0; i < mSkinNum; i++)
+			{
+				result = LoadSkinData2(br, s->mSkin[i]);
+				if (!result)
+					break;
+			}
+
+			DebugA("<< LoadSkin2UncompressedChunk::LoadSkin2Data() -> %d\r\n", result);
+		}
+
+		return result;
+	}
+
 	bool LoadSkin2CompressChunk(SkinVersion2* s, BinaryReader& br)
 	{
-		int mSkinNum = 0;
 		Zlib z( br );
 		if (!Zlib::Decompress(z))
 		{
@@ -189,61 +206,24 @@ namespace {
 			return false;
 		}
 
+		bool result = false;
 		BinaryReader sub( &z.m_OriginalData, 0, z.m_OriginalSize );
-		mSkinNum = sub.ReadInt();
+		int mSkinNum = sub.ReadInt();
 		if (mSkinNum > 0)
 		{
-			bool res = false;
-
-			s->mSkin.resize( mSkinNum );
-			for (int i = 0; i < mSkinNum; i++)
-			{
-				res = LoadSkinData2(sub, s->mSkin[i]);
-				if (!res)
-					break;
-			}
-
-			DebugA("<< LoadSkin2CompressChunk::LoadSkin2Data() -> %d\r\n", res);
-
-			if (!res) {
-				delete s;
-				s = nullptr;
-			}
-
-			return res;
-		}
-
-
-		return false;
-	}
-
-	bool LoadUncompressedChunk(SkinVersion2* s, BinaryReader& br)
-	{
-		int mSkinNum = br.ReadInt();
-		if (mSkinNum > 0)
-		{
-			bool res = false;
-
 			s->mSkin.resize(mSkinNum);
 			for (int i = 0; i < mSkinNum; i++)
 			{
-				res = LoadSkinData2(br, s->mSkin[i]);
-				if (!res)
+				result = LoadSkinData2(sub, s->mSkin[i]);
+				if (!result)
 					break;
 			}
-
-			DebugA("<< LoadUncompressedChunk::LoadSkin2Data() -> %d\r\n", res);
-
-			if (!res) {
-				delete s;
-				s = nullptr;
-			}
-
-			return res;
 		}
+		DebugA("<< LoadSkin2CompressChunk::LoadSkin2Data() -> %d\r\n", result);
 
-		return false;
+		return result;
 	}
+
 
 }
 
@@ -255,7 +235,7 @@ namespace XLoader {
 
 	bool GXDSkin2Loader::Load(const char* tFileName, XSkinMesh* skin)
 	{
-		bool res = false;
+		bool result = false;
 		FileLoader f;
 		std::vector<char> data;
 
@@ -270,7 +250,7 @@ namespace XLoader {
 		if (!LoadSkin2Header(br, &tVersion))
 		{
 			DebugA("%s << !LoadSkin2Header()\r\n", tFileName);
-			return res;
+			return result;
 		}
 
 		bool tValid = false, tCompressed = false;
@@ -283,26 +263,28 @@ namespace XLoader {
 			if (!LoadSkin2Extra(br, tValid, tCompressed))
 			{
 				DebugA("%s << !LoadSkin2Extra()\r\n", tFileName);
-				return res;
 			}
 			break;
-		default:
-			return res;
 		}
 
-		if (!tValid)
-			return true;
+		if (tValid)
+		{
+			skin->v2 = new SkinVersion2();
+			if (tCompressed) {
+				result = LoadSkin2CompressChunk(skin->v2, br);
+			}
+			else {
+				result = LoadSkin2UncompressedChunk(skin->v2, br);
+			}
+			skin->Create2(result);
 
-		skin->v2 = new SkinVersion2();
-		if (tCompressed) {
-			res = LoadSkin2CompressChunk(skin->v2, br);
+			if (!result) {
+				delete skin->v2;
+				skin->v2 = nullptr;
+			}
 		}
-		else {
-			res = LoadUncompressedChunk(skin->v2, br);
-		}
-		skin->Create2( res );
 
-		return res;
+		return result;
 	}
 
 }

@@ -22,8 +22,8 @@ void XCamera::Initialize(int tScreenXSize, int tScreenYSize, float tFovY, float 
 
     float sX = static_cast<float>( tScreenXSize );
     float sY = static_cast<float>( tScreenYSize );
-
-	mCameraEye = D3DXVECTOR3( 0.0f, 5.0f, -38.0f );
+    
+    mCameraEye = D3DXVECTOR3( 0.0f, 5.0f, -38.0f );
     mCameraLook = D3DXVECTOR3( 0.0f, 10.0f, 0.0f );
     mCameraUp = D3DXVECTOR3( 0.0f, 1.0f, 0.0f );
 

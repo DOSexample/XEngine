@@ -3,7 +3,9 @@
 #include "XCamera.h"
 #include "XSkinMesh.h"
 #include "XShader.h"
+#include "XAnimation/XAnimationMotion.h"
 #include "XLoader/GXDSkin2Loader.h"
+#include "XLoader/GXDMotionLoader.h"
 
 #include <string>
 
@@ -24,6 +26,7 @@ int WINAPI WinMain(
     }
     xWin32.Show(nShowCmd);
 
+
     if (!xEngine.Initialize(xWin32.GetHWND(), xWin32.GetWidth(), xWin32.GetHeight()))
     {
         return xWin32.MessageBoxA("!xd3d9::Initialize()", BUTTON_OK_AND_ICON_ERROR);
@@ -31,68 +34,98 @@ int WINAPI WinMain(
     xCam.Initialize( xWin32.GetWidth(), xWin32.GetHeight(), 45.0f, 1.0f, 10000.0f );
     xEngine.SetCamera(&xCam);
 
-    XLoader::GXDSkin2Loader skin2;
-    XSkinMesh hair, face, body, arm, foot;
 
-//    skin2.Load( "SObject\\TwelveSky2\\C001001001.SOBJECT", &hair);
-//    skin2.Load( "SObject\\TwelveSky2\\C001002001.SOBJECT", &face);
-//    skin2.Load( "SObject\\TwelveSky2\\C001003001.SOBJECT", &body);
-//    skin2.Load( "SObject\\TwelveSky2\\C001004001.SOBJECT", &foot);
-//
-//    //skin2.Load( "SObject\\Troy vs Sparta\\FC_102_100_001.SOBJECT", &hair);
-//    skin2.Load( "SObject\\Troy vs Sparta\\FC_101_101_001.SOBJECT", &face);
-//    skin2.Load( "SObject\\Troy vs Sparta\\FC_W_103_101_001.SOBJECT", &hair);//helmet
-//    skin2.Load( "SObject\\Troy vs Sparta\\FC_W_104_102_001.SOBJECT", &body);
-//    skin2.Load( "SObject\\Troy vs Sparta\\FC_W_105_101_001.SOBJECT", &arm);//arm
-//    skin2.Load( "SObject\\Troy vs Sparta\\FC_W_106_101_001.SOBJECT", &foot);
-//
-//    skin2.Load("SObject\\WarenStory\\C001002001.SOBJECT", &hair);
-//    skin2.Load("SObject\\WarenStory\\C001003001.SOBJECT", &face);
-//    skin2.Load("SObject\\WarenStory\\C001008001.SOBJECT", &body);
-
-    std::vector<XSkinMesh*> vSkin = {};
-    vSkin.push_back(&hair);
-    vSkin.push_back(&face);
-    vSkin.push_back(&body);
-    vSkin.push_back(&arm);
-    vSkin.push_back(&foot);
-
-    XShader common;
+    XShader common, animMotion;
     {
-        common.AddVertexInput("mKeyMatrix");
         common.AddVertexInput("mWorldViewProjMatrix");
         common.AddVertexInput("mLightDirection");
         common.AddVertexInput("mLightAmbient");
         common.AddVertexInput("mLightDiffuse");
         common.AddPixelInput("mTexture0");
-        printf( "common: %d\n", SUCCEEDED(common.CreateFromFile("Common", "Shaders\\Common.vs.fx", "Shaders\\Common.ps.fx") ) );
+        printf("common: %d\n", SUCCEEDED(common.CreateFromFile("Common", "Shaders\\Common.vs.fx", "Shaders\\Common.ps.fx")));
+    }
+    {
+        animMotion.AddVertexInput("mKeyMatrix");
+        animMotion.AddVertexInput("mWorldViewProjMatrix");
+        animMotion.AddVertexInput("mLightDirection");
+        animMotion.AddVertexInput("mLightAmbient");
+        animMotion.AddVertexInput("mLightDiffuse");
+        animMotion.AddPixelInput("mTexture0");
+        printf("AnimMotion: %d\n", SUCCEEDED(animMotion.CreateFromFile("AnimMotion", "Shaders\\AnimMotion.vs.fx", "Shaders\\AnimMotion.ps.fx")));
     }
 
 
+    std::vector<XSkinMesh*> vSkin = {};
+    XLoader::GXDSkin2Loader skin2;
+    XSkinMesh hair, face, body, arm, foot;
+    {
+        skin2.Load("SObject\\TwelveSky2\\C001001001.SOBJECT", &hair);
+        skin2.Load("SObject\\TwelveSky2\\C001002001.SOBJECT", &face);
+        skin2.Load("SObject\\TwelveSky2\\C001003001.SOBJECT", &body);
+        skin2.Load("SObject\\TwelveSky2\\C001004001.SOBJECT", &foot);
+        //
+        //    //skin2.Load( "SObject\\Troy vs Sparta\\FC_102_100_001.SOBJECT", &hair);
+        //    skin2.Load( "SObject\\Troy vs Sparta\\FC_101_101_001.SOBJECT", &face);
+        //    skin2.Load( "SObject\\Troy vs Sparta\\FC_W_103_101_001.SOBJECT", &hair);//helmet
+        //    skin2.Load( "SObject\\Troy vs Sparta\\FC_W_104_102_001.SOBJECT", &body);
+        //    skin2.Load( "SObject\\Troy vs Sparta\\FC_W_105_101_001.SOBJECT", &arm);//arm
+        //    skin2.Load( "SObject\\Troy vs Sparta\\FC_W_106_101_001.SOBJECT", &foot);
+        //
+        //    skin2.Load("SObject\\WarenStory\\C001002001.SOBJECT", &hair);
+        //    skin2.Load("SObject\\WarenStory\\C001003001.SOBJECT", &face);
+        //    skin2.Load("SObject\\WarenStory\\C001008001.SOBJECT", &body);
+
+        vSkin.push_back(&hair);
+        vSkin.push_back(&face);
+        vSkin.push_back(&body);
+        vSkin.push_back(&arm);
+        vSkin.push_back(&foot);
+    }
+
+    XLoader::GXDMotionLoader motion;
+    XAnimationMotion anim;
+    {
+        //C00?001002 - Level Idle
+        //C00?001078 - Master Idle
+        //C00?001085 - God Idle
+        printf("motion: %d\n", motion.Load("Motion\\C001001085.MOTION", &anim));
+    }
+
+
+    float oneFrame = 0.033f * 0.1f;
     MSG msg = { 0, 0 };
     while (msg.message != WM_QUIT)
     {
         if (!xWin32.ProcessMessages(&msg))
         {
             auto rot = body.GetRotation();
-            rot.y += 0.16f * 0.1f;
+            rot.y += oneFrame;
             if (rot.y > 360.0f)
                 rot.y = 0.0f;
-            hair.SetRotation(rot);
-            face.SetRotation(rot);
-            body.SetRotation(rot);
-            foot.SetRotation(rot);
+            for (auto it = vSkin.begin(); it != vSkin.end(); ++it)
+                (*it)->SetRotation(rot);
 
+            static float testFrame = 0;
+            anim.mCurAnimFrame = (int)testFrame;
+            testFrame += oneFrame;
+            if ( (int)testFrame >= anim.mFrameNum )
+                testFrame = 0.0f;
+        
             xCam.Update();
-
+        
             xEngine.Clear(ALL, Grey);
             xEngine.BeginScene();
             {
                 for (auto it = vSkin.begin(); it != vSkin.end(); ++it)
                     (*it)->Update();
-
+        
                 for (auto it = vSkin.begin(); it != vSkin.end(); ++it)
-                    (*it)->Draw();
+                {
+                    //Draw with animation motion
+                    (*it)->Draw(&anim);
+                    //Draw without animation motion
+                    //(*it)->Draw();
+                }
             }
             xEngine.EndScene();
         }

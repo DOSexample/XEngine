@@ -22,6 +22,12 @@
     <Filter Include="XLoader">
       <UniqueIdentifier>{bec479a7-ede2-4c26-ab90-8c73c7e0d348}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\XAnimation">
+      <UniqueIdentifier>{ba92b3ce-d10f-4214-a5bd-c676b44cc6ec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\XAnimation">
+      <UniqueIdentifier>{03ffc058-23b7-4823-9d73-c59034c37405}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="XEngine.h">
@@ -62,6 +68,12 @@
     </ClInclude>
     <ClInclude Include="XTransform.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="XAnimation\XAnimationMotion.h">
+      <Filter>Header Files\XAnimation</Filter>
+    </ClInclude>
+    <ClInclude Include="XLoader\GXDMotionLoader.h">
+      <Filter>XLoader</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -106,6 +118,12 @@
     </ClCompile>
     <ClCompile Include="XTransform.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="XAnimation\XAnimationMotion.cpp">
+      <Filter>Source Files\XAnimation</Filter>
+    </ClCompile>
+    <ClCompile Include="XLoader\GXDMotionLoader.cpp">
+      <Filter>XLoader</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

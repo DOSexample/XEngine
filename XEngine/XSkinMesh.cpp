@@ -5,6 +5,7 @@
 #include "XRenderState.h"
 #include "XShader.h"
 #include "XTransform.h"
+#include "XAnimation/XAnimationMotion.h"
 
 XSkinMesh::XSkinMesh()
     :
@@ -97,7 +98,7 @@ void XSkinMesh::Create2(bool isSuccess)
     }
 }
 
-void XSkinMesh::Draw()
+void XSkinMesh::Draw(XAnimationMotion* anim)
 {
     switch ( mSkinVersion )
     {
@@ -112,6 +113,17 @@ void XSkinMesh::Draw()
     //printf("XSkinMesh::Draw()\n");
 	auto device = &XDevice::Instance();
 
+    XAnimationMotion* xa = nullptr;
+    static float cFrame = 0;
+
+    XShader* xs = nullptr;
+
+    if (anim && anim->mFrameNum > 0 && anim->mBoneNum > 0) {
+        xs = XShaderManager::Get("AnimMotion");
+        xa = anim;
+    }
+    else
+        xs = XShaderManager::Get("Common");
     
     switch ( mSkinVersion )
     {
@@ -151,10 +163,8 @@ void XSkinMesh::Draw()
                     //set render pass/state
                     //XRenderPass rp;
                     XRenderState rt;
-                    XShader* xs = XShaderManager::Get("Common");
                     
-                    //printf( "skin[%d] -> pDiffuseMap.Alpha: %d\r\n", i, pDiffuseMap->mAlphaModeCase );
-                    
+                    //printf( "skin[%d] -> pDiffuseMap.Alpha: %d\r\n", i, pDiffuseMap->mAlphaModeCase );                    
                     switch ( pDiffuseMap->mAlphaModeCase )
                     {
                     //case 0:
@@ -179,7 +189,7 @@ void XSkinMesh::Draw()
                         //device->SetRenderState( D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA );
                         break;
                     }
-                    rt.Apply(this, xs, pDiffuseMap, pNormalMap, pSpecularMap);
+                    rt.Apply(this, xs, xa, pDiffuseMap, pNormalMap, pSpecularMap);
                     ////rp.SetRenderState(&rt);
                     
                     //printf("Drawing skin[%d].lod[%d]\n", i, j);

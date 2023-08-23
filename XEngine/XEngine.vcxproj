@@ -142,10 +142,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="XAnimation\XAnimationMotion.h" />
     <ClInclude Include="XCamera.h" />
     <ClInclude Include="XDevice.h" />
     <ClInclude Include="XEngine.h" />
     <ClInclude Include="XLoader\FileLoader.h" />
+    <ClInclude Include="XLoader\GXDMotionLoader.h" />
     <ClInclude Include="XLoader\GXDSkin2Loader.h" />
     <ClInclude Include="XRenderState.h" />
     <ClInclude Include="XShader.h" />
@@ -158,10 +160,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="XAnimation\XAnimationMotion.cpp" />
     <ClCompile Include="XCamera.cpp" />
     <ClCompile Include="XDevice.cpp" />
     <ClCompile Include="XEngine.cpp" />
     <ClCompile Include="XLoader\FileLoader.cpp" />
+    <ClCompile Include="XLoader\GXDMotionLoader.cpp" />
     <ClCompile Include="XLoader\GXDSkin2Loader.cpp" />
     <ClCompile Include="XRenderState.cpp" />
     <ClCompile Include="XShader.cpp" />

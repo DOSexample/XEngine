@@ -1,8 +1,9 @@
 #pragma once
 
+class XTransform;
 class XTexture;
 class XShader;
-class XTransform;
+class XAnimationMotion;
 class XRenderState {
 public:
     enum class BlendMode {
@@ -88,6 +89,6 @@ public:
         alphaReferenceValue = value;
     }
 
-    void Apply(XTransform* transform = 0, XShader* xs = 0, XTexture* pDiffuseMap = 0, XTexture* pNormalMap = 0, XTexture* pSpecularMap = 0);
+    void Apply(XTransform* transform = 0, XShader* xs = 0, XAnimationMotion* anim = 0, XTexture* pDiffuseMap = 0, XTexture* pNormalMap = 0, XTexture* pSpecularMap = 0);
 
 };

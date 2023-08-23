@@ -140,11 +140,11 @@ void XDevice::BeginScene()
     D3DXMatrixIdentity( &mWorldMatrix );
     m_pDevice->SetTransform( D3DTS_WORLD, &mWorldMatrix );
 
-    //{
-    //    m_pDevice->SetMaterial(&mMaterial);
-    //    m_pDevice->LightEnable(0, TRUE);
-    //    m_pDevice->SetLight(0, &mLight);
-    //}
+    {
+        m_pDevice->SetMaterial(&mMaterial);
+        m_pDevice->LightEnable(0, TRUE);
+        m_pDevice->SetLight(0, &mLight);
+    }
     {   //Sampler : Texture
         m_pDevice->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
         m_pDevice->SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_LINEAR);

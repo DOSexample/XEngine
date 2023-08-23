@@ -22,7 +22,7 @@ XShader* XShaderManager::Get(const std::string& name)
 
 	auto it = s_Shader.find(name);
 	auto xs = it != s_Shader.end() ? it->second : nullptr;
-	if (s_useShaderName != name)
+	if (xs && s_useShaderName != name)
 	{
 		s_lastShader = xs;
 		s_useShaderName = name;
@@ -129,8 +129,9 @@ HRESULT XShader::Create(ShaderType type, const char* fileName)
 	printf("%p, %p \r\n", this->vs->constantTable, this->ps->constantTable);
 	if (type == ShaderType::Vertex)
 	{
-		for (auto it = this->vs->params.begin(); it != this->vs->params.end(); ++it)
+		for (auto it = this->vs->params.begin(); it != this->vs->params.end(); ++it) {
 			it->second = this->vs->constantTable->GetConstantByName(0, it->first.c_str());
+		}
 	}
 	else
 	{
@@ -162,40 +163,55 @@ void XShader::AddPixelInput(const char* name)
 		this->ps->params.insert({ name, new PixelDesc{ D3DXHANDLE{}, D3DXCONSTANT_DESC{} } });
 }
 
-void XShader::SetTexture(const char* name, XTexture* pTexture)
+void XShader::Set(ShaderType shadertype, ShaderSetType setType, const char* name, LPCVOID pSrcData, UINT count)
 {
 	auto device = &XDevice::Instance();
-	if ( (int)this->ps->params.size() > 0 ) {
-		auto px = this->ps->params[name];
-		if (px && px->handle) {
-			//printf("SetTexture: %s, id: %d\r\n", name, px->desc.RegisterIndex);
-			device->SetTexture( px->desc.RegisterIndex, pTexture );
+	auto real_device = (LPDIRECT3DDEVICE9)device->GetRealDevice();
+	ID3DXConstantTable* constantTable = NULL;
+	D3DXHANDLE handle = NULL;
+	D3DXCONSTANT_DESC* desc = NULL;
+
+	if (shadertype == ShaderType::Vertex)
+	{
+		constantTable = this->vs->constantTable;
+
+		auto it = this->vs->params.find(name);
+		if (it != this->vs->params.end()) {
+			handle = it->second;
 		}
 	}
-}
+	else
+	{
+		constantTable = this->ps->constantTable;
 
-void XShader::SetFloatArray(const char* name, const FLOAT* pSrcData, UINT count)
-{
-	auto device = &XDevice::Instance();
-	//printf("SetFloatArray: %s, >> size: %d\r\n", name, (int)vsParams.size());
-	if ( (int)this->vs->params.size() > 0 ) {
-		auto mtx = this->vs->params[name];
-		if (mtx) {
-			//printf("SetFloatArray: %s, >> %p\r\n", name, mtx);
-			this->vs->constantTable->SetFloatArray( (LPDIRECT3DDEVICE9)device->GetRealDevice(), mtx, pSrcData, count);
+		auto it = this->ps->params.find(name);
+		if (it != this->ps->params.end()) {
+			handle = it->second->handle;
+			desc = &it->second->desc;
 		}
 	}
-}
 
-void XShader::SetMatrix(const char* name, const D3DXMATRIX* pMatrix)
-{
-	auto device = &XDevice::Instance();
-	//printf("SetMatrix: %s, >> size: %d\r\n", name, (int)vsParams.size());
-	if ( (int)this->vs->params.size() > 0 ) {
-		auto mtx = this->vs->params[name];
-		if (mtx) {
-			//printf("SetMatrix: %s, >> %p\r\n", name, mtx);
-			this->vs->constantTable->SetMatrix( (LPDIRECT3DDEVICE9)device->GetRealDevice(), mtx, pMatrix );
-		}
+	//printf("XShader::Set() -> %d,%d,%s,%p,%p\n", shadertype, setType, name,handle, desc);
+
+	if (!handle) return;
+
+	switch ( setType )
+	{
+	case ShaderSetType::SetTexture:
+		if( desc )
+			device->SetTexture( desc->RegisterIndex, (XTexture*)pSrcData );
+		break;
+	case ShaderSetType::SetFloat:
+		constantTable->SetFloat( real_device, handle, *((FLOAT*)( pSrcData )) );
+		break;
+	case ShaderSetType::SetFloatArray:
+		constantTable->SetFloatArray( real_device, handle, ((const FLOAT*)( pSrcData )), count );
+		break;
+	case ShaderSetType::SetMatrix:
+		constantTable->SetMatrix( real_device, handle, ((const D3DXMATRIX*)pSrcData ));
+		break;
+	case ShaderSetType::SetMatrixArray:
+		constantTable->SetMatrixArray( real_device, handle, ((const D3DXMATRIX*)( pSrcData )), count );
+		break;
 	}
 }

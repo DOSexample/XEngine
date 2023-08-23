@@ -4,6 +4,7 @@
 #include "XTexture.h"
 #include "XShader.h"
 #include "XTransform.h"
+#include "XAnimation/XAnimationMotion.h"
 
 XRenderState::XRenderState()
     : 
@@ -19,7 +20,7 @@ XRenderState::XRenderState()
 
 }
 
-void XRenderState::Apply(XTransform* transform, XShader* xs, XTexture* pDiffuseMap, XTexture* pNormalMap, XTexture* pSpecularMap) {
+void XRenderState::Apply(XTransform* transform, XShader* xs, XAnimationMotion* anim, XTexture* pDiffuseMap, XTexture* pNormalMap, XTexture* pSpecularMap) {
     auto device = &XDevice::Instance();
 
     // Depth test
@@ -170,43 +171,47 @@ void XRenderState::Apply(XTransform* transform, XShader* xs, XTexture* pDiffuseM
             renderType = 2;
     }
 
-    float tCoord[3] = {0,0,0};
-    float tAngle[3] = {0,0,0};
-    float tScale[3] = {1,1,1};
-
     D3DXMATRIX xTRSMatrix = transform->GetWorldMatrix();
+    D3DXMATRIX worldMatrix = xTRSMatrix;
+    D3DXMATRIX wvp = worldMatrix * device->GetViewMatrix() * device->GetPerspectiveMatrix();
+    D3DXMatrixInverse(&worldMatrix, 0, &worldMatrix);
+
+    D3DLIGHT9 light = device->GetDefaultLight();
+    D3DCOLORVALUE amb_light = light.Ambient, dif_light = light.Diffuse;
+    D3DXVECTOR3 dir_light = light.Direction;
+    dir_light.x *= -1.0f;
+    dir_light.y *= -1.0f;
+    dir_light.z *= -1.0f;
+
+    amb_light.a = 1.0f;
+    dif_light.a = 1.0f;
+
+    D3DXVec3TransformNormal( &dir_light, &dir_light, &worldMatrix );
+    D3DXVec3Normalize( &dir_light, &dir_light );
 
     //switch ( renderType )
     //{
     //case 1:
         if (XShader::IsValidVertex(xs))
         {
-            D3DXMATRIX worldMatrix = xTRSMatrix;
-            D3DXMATRIX wvp = worldMatrix * device->GetViewMatrix() * device->GetPerspectiveMatrix();
-            D3DXMatrixInverse( &worldMatrix, 0, &worldMatrix );
-            
-            D3DLIGHT9 light = device->GetDefaultLight();
-            D3DCOLORVALUE amb_light = light.Ambient, dif_light = light.Diffuse;
-            D3DXVECTOR3 dir_light = light.Direction;
-            dir_light.x *= -1.0f;
-            dir_light.y *= -1.0f;
-            dir_light.z *= -1.0f;
-            
-            amb_light.a = 1.0f;
-            dif_light.a = 1.0f;
-            
-            D3DXVec3TransformNormal( &dir_light, &dir_light, &worldMatrix );
-            D3DXVec3Normalize( &dir_light, &dir_light );
-            xs->SetMatrix("mWorldViewProjMatrix", &wvp);
-            xs->SetFloatArray("mLightDirection", (const FLOAT*)&dir_light, 3);
-            xs->SetFloatArray("mLightAmbient", (const FLOAT*)&amb_light, 3);
-            xs->SetFloatArray("mLightDiffuse", (const FLOAT*)&dif_light, 3);
+            if (anim && anim->mFrameNum > 0 && anim->mBoneNum > 0)
+            {
+                xs->Set(ShaderType::Vertex, ShaderSetType::SetMatrixArray, "mKeyMatrix", anim->mMatrixKey[ anim->mCurAnimFrame ].data(), anim->mBoneNum);
+            }
+            xs->Set(ShaderType::Vertex, ShaderSetType::SetMatrix, "mWorldViewProjMatrix", &wvp);
+            xs->Set(ShaderType::Vertex, ShaderSetType::SetFloatArray, "mLightDirection", (const FLOAT*)&dir_light, 3);
+            xs->Set(ShaderType::Vertex, ShaderSetType::SetFloatArray, "mLightAmbient", (const FLOAT*)&amb_light, 3);
+            xs->Set(ShaderType::Vertex, ShaderSetType::SetFloatArray, "mLightDiffuse", (const FLOAT*)&dif_light, 3);
         }
         if (XShader::IsValidPixel(xs))
         {
-            xs->SetTexture("mTexture0", pDiffuseMap);
-            xs->SetTexture("mTexture1", pNormalMap);
-            xs->SetTexture("mTexture2", pSpecularMap);
+            xs->Set(ShaderType::Pixel, ShaderSetType::SetTexture, "mTexture0", pDiffuseMap);
+            xs->Set(ShaderType::Pixel, ShaderSetType::SetTexture, "mTexture1", pNormalMap);
+            xs->Set(ShaderType::Pixel, ShaderSetType::SetTexture, "mTexture2", pSpecularMap);
+
+            //for animmotion
+            //xs->Set(ShaderType::Pixel, ShaderSetType::SetFloatArray, "mLightAmbient", (const FLOAT*)&amb_light, 3);
+            //xs->Set(ShaderType::Pixel, ShaderSetType::SetFloatArray, "mLightDiffuse", (const FLOAT*)&dif_light, 3);
         }
     //    break;
     //}

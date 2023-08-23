@@ -10,6 +10,14 @@ enum class ShaderType
 	Vertex,
 	Pixel,
 };
+enum class ShaderSetType
+{
+	SetTexture,
+	SetFloat,
+	SetFloatArray,
+	SetMatrix,
+	SetMatrixArray,
+};
 
 class XShader
 {
@@ -26,10 +34,7 @@ public:
 	void AddVertexInput(const char* name);
 	void AddPixelInput(const char* name);
 
-	void SetTexture(const char* name, XTexture* pTexture);
-
-	void SetFloatArray(const char* name, const FLOAT* pSrcData, UINT coun);
-	void SetMatrix(const char* name, const D3DXMATRIX* pMatrix);
+	void Set(ShaderType shadertype, ShaderSetType setType, const char* name, LPCVOID pSrcData, UINT count = 0);
 
 	int id;
 	std::string name;

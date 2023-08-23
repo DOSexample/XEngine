@@ -24,11 +24,26 @@ xCam.Initialize( xWin32.GetWidth(), xWin32.GetHeight(), 45.0f, 1.0f, 10000.0f );
 xEngine.SetCamera(&xCam);
 ```
 
-4.Load Skin
+4.Load and Compile Shader
 ```
+XShader common;
+{
+    common.AddVertexInput("mKeyMatrix");
+    common.AddVertexInput("mWorldViewProjMatrix");
+    common.AddVertexInput("mLightDirection");
+    common.AddVertexInput("mLightAmbient");
+    common.AddVertexInput("mLightDiffuse");
+    common.AddPixelInput("mTexture0");
+    printf( "common: %d\n", SUCCEEDED(common.CreateFromFile("Common", "Shaders\\Common.vs.fx", "Shaders\\Common.ps.fx") ) );
+}
+```
+
+5.Load Skin
+```
+std::vector<XSkinMesh*> vSkin = {};
 XLoader::GXDSkin2Loader skin2;
 XSkinMesh hair, face, body, arm, foot;
-
+{
 //    skin2.Load( "SObject\\TwelveSky2\\C001001001.SOBJECT", &hair);
 //    skin2.Load( "SObject\\TwelveSky2\\C001002001.SOBJECT", &face);
 //    skin2.Load( "SObject\\TwelveSky2\\C001003001.SOBJECT", &body);
@@ -45,58 +60,62 @@ XSkinMesh hair, face, body, arm, foot;
 //    skin2.Load("SObject\\WarenStory\\C001003001.SOBJECT", &face);
 //    skin2.Load("SObject\\WarenStory\\C001008001.SOBJECT", &body);
 
-std::vector<XSkinMesh*> vSkin = {};
 vSkin.push_back(&hair);
 vSkin.push_back(&face);
 vSkin.push_back(&body);
 vSkin.push_back(&arm);
 vSkin.push_back(&foot);
-```
-
-5.Load and Compile Shader
-```
-XShader common;
-{
-    common.AddVertexInput("mKeyMatrix");
-    common.AddVertexInput("mWorldViewProjMatrix");
-    common.AddVertexInput("mLightDirection");
-    common.AddVertexInput("mLightAmbient");
-    common.AddVertexInput("mLightDiffuse");
-    common.AddPixelInput("mTexture0");
-    printf( "common: %d\n", SUCCEEDED(common.CreateFromFile("Common", "Shaders\\Common.vs.fx", "Shaders\\Common.ps.fx") ) );
 }
 ```
 
-6.Loop
+6.Load Motion
 ```
+XLoader::GXDMotionLoader motion;
+XAnimationMotion anim;
+{
+	//C00?001002 - Level Idle
+	//C00?001078 - Master Idle
+	//C00?001085 - God Idle
+	printf("motion: %d\n", motion.Load("Motion\\C001001085.MOTION", &anim));
+}
+```
+
+N.Loop
+```
+float oneFrame = 0.033f * 0.1f;
 MSG msg = { 0, 0 };
 while (msg.message != WM_QUIT)
 {
     if (!xWin32.ProcessMessages(&msg))
     {
         auto rot = body.GetRotation();
-        rot.y += 0.16f * 0.1f;
+        rot.y += oneFrame;
         if (rot.y > 360.0f)
             rot.y = 0.0f;
-        hair.SetRotation(rot);
-        face.SetRotation(rot);
-        body.SetRotation(rot);
-        foot.SetRotation(rot);
+		for (auto it = vSkin.begin(); it != vSkin.end(); ++it)
+			(*it)->SetRotation(rot);
+			
+        static float testFrame = 0;
+        anim.mCurAnimFrame = (int)testFrame;
+        testFrame += oneFrame;
+        if ( (int)testFrame >= anim.mFrameNum )
+            testFrame = 0.0f;
 
         xCam.Update();
 
         xEngine.Clear(ALL, Grey);
         xEngine.BeginScene();
         {
-            hair.Update();
-            face.Update();
-            body.Update();
-            foot.Update();
-
-            hair.Draw();
-            face.Draw();
-            body.Draw();
-            foot.Draw();
+			for (auto it = vSkin.begin(); it != vSkin.end(); ++it)
+				(*it)->Update();
+        
+			for (auto it = vSkin.begin(); it != vSkin.end(); ++it)
+			{
+				//Draw with animation motion
+				(*it)->Draw(&anim);
+				//Draw without animation motion
+				(*it)->Draw();
+			}
         }
         xEngine.EndScene();
     }

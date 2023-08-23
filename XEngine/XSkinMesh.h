@@ -89,6 +89,7 @@ enum GXD_SKIN_VERSION
 	V5
 };
 
+class XAnimationMotion;
 class XTransform;
 class XSkinMesh : public XTransform
 {
@@ -106,7 +107,7 @@ public:
 	/// </summary>
 	void Create2(bool isSuccess);
 
-	void Draw();
+	void Draw(XAnimationMotion* anim = 0);
 
 };
 
