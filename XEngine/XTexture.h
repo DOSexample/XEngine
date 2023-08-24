@@ -29,6 +29,6 @@ public:
 	~XTexture();
 
 	void Free();
-	bool Load(XSystem::IO::BinaryReader& br);
+	bool Load(XSystem::IO::BinaryReader& br, const char* name);
 };
 

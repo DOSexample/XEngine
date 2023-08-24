@@ -7,23 +7,32 @@ namespace XSystem {
 		{
 		}
 
-		BinaryReader::BinaryReader(std::vector<char>* curData, size_t curOffset, size_t maxSize) : m_CurData(curData), m_CurOffset(curOffset), m_MaxSize(maxSize)
+		BinaryReader::BinaryReader(std::vector<char>* curData, size_t curOffset, size_t maxSize) 
+			: 
+			m_CurData(curData), 
+			m_CurOffset(curOffset), 
+			m_MaxSize(maxSize)
 		{
 		}
 
 		BinaryReader::~BinaryReader()
 		{
+			m_CurData = nullptr;
+			m_CurOffset = -1;
+			m_MaxSize = -1;
 		}
 
 		bool BinaryReader::CanRead(int count)
 		{
-			if (m_CurOffset + count > m_MaxSize) return false;
-
-			return true;
+			return CanRead( (size_t)count );
 		}
 		bool BinaryReader::CanRead(size_t count)
 		{
-			if (m_CurOffset + count > m_MaxSize) return false;
+			if (m_CurOffset == -1 || m_MaxSize == -1)
+				return false;
+
+			if (m_CurOffset + count > m_MaxSize)
+				return false;
 
 			return true;
 		}

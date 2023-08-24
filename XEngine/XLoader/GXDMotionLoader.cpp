@@ -28,8 +28,27 @@ namespace {
 	bool LoadMotion2Header(BinaryReader& br, int* tVersion)
 	{
 		char tBuffer[12];
+		memset(tBuffer, 0, sizeof(tBuffer));
 
-		return br.ReadString(tBuffer, 7) && strncmp("MOTION", tBuffer, 6) == 0 && ((*tVersion = tBuffer[6] - '0'), *tVersion == 2 || *tVersion == 3);
+		char* tmp = br.ReadString(tBuffer, 7);
+		if (!tmp)
+			return false;
+
+		if (strncmp("MOTION", tBuffer, 6) == 0)
+		{
+			*tVersion = tBuffer[6] - '0';
+			if (*tVersion == 2 || *tVersion == 3)
+				return true;
+		}
+		else
+		{
+			//set offset back to 0
+			br.SetCurrentOffset(0);
+			*tVersion = 1;
+			return true;
+		}
+
+		return false;
 	}
 
 	bool ApplyLoadMotion(XAnimationMotion* s, BinaryReader& br)
@@ -110,6 +129,10 @@ namespace XLoader
 		{
 			switch ( tVersion )
 			{
+			case 1://TwelveSky1 | TwelveSky2
+				tValid = true;
+				tCompressed = true;
+				break;
 			case 2://Troy vs Sparta | Waren Story
 				tValid = true;
 				break;

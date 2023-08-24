@@ -8,7 +8,7 @@ namespace XSystem {
 		{
 		public:
 			BinaryReader();
-			BinaryReader(std::vector<char>* curData, size_t curOffset, size_t maxSize);
+			BinaryReader(std::vector<char>* curData, size_t curOffset = -1, size_t maxSize = -1);
 			~BinaryReader();
 
 			bool CanRead(int count = 1);

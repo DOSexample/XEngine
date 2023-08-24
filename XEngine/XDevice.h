@@ -30,6 +30,45 @@ enum ColorType : DWORD
 class XCamera;
 class XTexture;
 
+enum class VertexDeclaretion {
+
+    /// <summary>
+    /// struct VS_INPUT
+    //{
+    //    float4 mPosition : POSITION;
+    //    float3 mNormal : NORMAL;
+    //    float2 mTexCoord : TEXCOORD;
+    //};
+    /// </summary>
+    VNT,
+
+    /// <summary>
+    /// struct VS_INPUT
+    //{
+    //    float4 mPosition : POSITION;
+    //    float3 mNormal : NORMAL;
+    //    float2 mTexCoord : TEXCOORD;
+    //    float4 mBlendWeight : BLENDWEIGHT;
+    //    float4 mBlendIndex : BLENDINDICES;
+    //};
+    /// </summary>
+    VNT_AND_BLEND,
+
+    /// <summary>
+    /// struct VS_INPUT
+    //{
+    //    float4 mPosition : POSITION;
+    //    float4 mBlendWeight : BLENDWEIGHT;
+    //    float4 mBlendIndex : BLENDINDICES;
+    //    float3 mTangent : TANGENT;
+    //    float3 mBinormal : BINORMAL;
+    //    float3 mNormal : NORMAL;
+    //    float2 mTexCoord : TEXCOORD;
+    //};
+    /// </summary>
+    ALL,
+};
+
 class XDevice
 {
 public:
@@ -49,11 +88,12 @@ public:
     D3DXMATRIX GetWorldMatrix();
     D3DXMATRIX GetViewMatrix();
     D3DXMATRIX GetPerspectiveMatrix();
+    XCamera* GetCamera();
     void SetCamera(XCamera* cam);
     const D3DLIGHT9 GetDefaultLight();
 
 	BOOL CreateVertexDeclaration();
-    BOOL SetVertexDeclaration();
+    BOOL SetVertexDeclaration(VertexDeclaretion vtx);
 
 	BOOL CreateTexture(	
 		LPCVOID                   pSrcData,

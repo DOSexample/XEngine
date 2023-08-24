@@ -1,5 +1,6 @@
 #pragma once
 
+struct D3DXVECTOR3;
 struct D3DXMATRIX;
 class XCamera
 {
@@ -10,7 +11,9 @@ public:
 
 	void Update();
 
+	const D3DXVECTOR3 GetEye();
 	void SetEye(float x, float y, float z);
+
 	void SetLook(float x, float y, float z);
 
 	D3DXMATRIX* GetViewMatrix();

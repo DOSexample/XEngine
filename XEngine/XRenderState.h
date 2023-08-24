@@ -60,7 +60,10 @@ public:
     XRenderState();
 
 
-    // Setters
+    /// <summary>
+    /// Set Alpha Blend Mode
+    /// </summary>
+    /// <param name="mode"></param>
     void SetBlendMode(BlendMode mode) {
         blendMode = mode;
     }
@@ -73,6 +76,10 @@ public:
         cullMode = mode;
     }
 
+    /// <summary>
+    /// Eanbled/Disabled Z-Write
+    /// </summary>
+    /// <param name="enabled"></param>
     void SetDepthWrite(bool enabled) {
         depthWriteEnabled = enabled;
     }
@@ -89,6 +96,7 @@ public:
         alphaReferenceValue = value;
     }
 
-    void Apply(XTransform* transform = 0, XShader* xs = 0, XAnimationMotion* anim = 0, XTexture* pDiffuseMap = 0, XTexture* pNormalMap = 0, XTexture* pSpecularMap = 0);
+    void Apply1(XTransform* transform = 0, XShader* xs = 0, XAnimationMotion* anim = 0, XTexture* pDiffuseMap = 0, XTexture* pNormalMap = 0, XTexture* pSpecularMap = 0, XTexture* pFlowMap = 0);
+    void Apply2(XTransform* transform = 0, XShader* xs = 0, XAnimationMotion* anim = 0, XTexture* pDiffuseMap = 0, XTexture* pNormalMap = 0, XTexture* pSpecularMap = 0, XTexture* pFlowMap = 0);
 
 };

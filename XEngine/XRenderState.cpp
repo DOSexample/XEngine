@@ -1,6 +1,7 @@
 #include "XRenderState.h"
 
 #include "XDevice.h"
+#include "XCamera.h"
 #include "XTexture.h"
 #include "XShader.h"
 #include "XTransform.h"
@@ -20,7 +21,7 @@ XRenderState::XRenderState()
 
 }
 
-void XRenderState::Apply(XTransform* transform, XShader* xs, XAnimationMotion* anim, XTexture* pDiffuseMap, XTexture* pNormalMap, XTexture* pSpecularMap) {
+void XRenderState::Apply2(XTransform* transform, XShader* xs, XAnimationMotion* anim, XTexture* pDiffuseMap, XTexture* pNormalMap, XTexture* pSpecularMap, XTexture* pFlowMap) {
     auto device = &XDevice::Instance();
 
     // Depth test
@@ -189,6 +190,9 @@ void XRenderState::Apply(XTransform* transform, XShader* xs, XAnimationMotion* a
     D3DXVec3TransformNormal( &dir_light, &dir_light, &worldMatrix );
     D3DXVec3Normalize( &dir_light, &dir_light );
 
+    const D3DXVECTOR3 camEye = device->GetCamera()->GetEye();
+    D3DXVec3TransformCoord( (D3DXVECTOR3*)&camEye, &camEye, &worldMatrix );
+
     //switch ( renderType )
     //{
     //case 1:
@@ -202,16 +206,16 @@ void XRenderState::Apply(XTransform* transform, XShader* xs, XAnimationMotion* a
             xs->Set(ShaderType::Vertex, ShaderSetType::SetFloatArray, "mLightDirection", (const FLOAT*)&dir_light, 3);
             xs->Set(ShaderType::Vertex, ShaderSetType::SetFloatArray, "mLightAmbient", (const FLOAT*)&amb_light, 3);
             xs->Set(ShaderType::Vertex, ShaderSetType::SetFloatArray, "mLightDiffuse", (const FLOAT*)&dif_light, 3);
+            xs->Set(ShaderType::Vertex, ShaderSetType::SetFloatArray, "mCameraEye", (const FLOAT*)&camEye, 3);
         }
         if (XShader::IsValidPixel(xs))
         {
             xs->Set(ShaderType::Pixel, ShaderSetType::SetTexture, "mTexture0", pDiffuseMap);
             xs->Set(ShaderType::Pixel, ShaderSetType::SetTexture, "mTexture1", pNormalMap);
             xs->Set(ShaderType::Pixel, ShaderSetType::SetTexture, "mTexture2", pSpecularMap);
-
-            //for animmotion
-            //xs->Set(ShaderType::Pixel, ShaderSetType::SetFloatArray, "mLightAmbient", (const FLOAT*)&amb_light, 3);
-            //xs->Set(ShaderType::Pixel, ShaderSetType::SetFloatArray, "mLightDiffuse", (const FLOAT*)&dif_light, 3);
+            xs->Set(ShaderType::Pixel, ShaderSetType::SetTexture, "mTexture3", pFlowMap);
+            xs->Set(ShaderType::Pixel, ShaderSetType::SetFloatArray, "mLightAmbient", (const FLOAT*)&amb_light, 3);
+            xs->Set(ShaderType::Pixel, ShaderSetType::SetFloatArray, "mLightDiffuse", (const FLOAT*)&dif_light, 3);
         }
     //    break;
     //}

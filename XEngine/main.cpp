@@ -45,26 +45,58 @@ int WINAPI WinMain(
         common.AddPixelInput("mTexture0");
         printf("common: %d\n", SUCCEEDED(common.CreateFromFile("Common", "Shaders\\Common.vs.fx", "Shaders\\Common.ps.fx")));
     }
-    {
+    //{   //anim 2.5+
+    //    animMotion.AddVertexInput("mKeyMatrix");
+    //    animMotion.AddVertexInput("mWorldViewProjMatrix");
+    //    animMotion.AddVertexInput("mLightDirection");
+    //    animMotion.AddVertexInput("mLightAmbient");
+    //    animMotion.AddVertexInput("mLightDiffuse");
+    //    animMotion.AddPixelInput("mTexture0");
+    //    printf("AnimMotion: %d\n", SUCCEEDED(animMotion.CreateFromFile("AnimMotion", "Shaders\\AnimMotion.vs.fx", "Shaders\\AnimMotion.ps.fx")));
+    //}
+    { //anim 1.0 & 2.0
         animMotion.AddVertexInput("mKeyMatrix");
         animMotion.AddVertexInput("mWorldViewProjMatrix");
         animMotion.AddVertexInput("mLightDirection");
         animMotion.AddVertexInput("mLightAmbient");
         animMotion.AddVertexInput("mLightDiffuse");
         animMotion.AddPixelInput("mTexture0");
-        printf("AnimMotion: %d\n", SUCCEEDED(animMotion.CreateFromFile("AnimMotion", "Shaders\\AnimMotion.vs.fx", "Shaders\\AnimMotion.ps.fx")));
+        printf("AnimMotion: %d\n", SUCCEEDED(animMotion.CreateFromFile("AnimMotion", "Shaders\\AnimMotion.1.0.vs.fx", "Shaders\\AnimMotion.1.0.ps.fx")));
     }
+    //{   //flow
+    //    animMotion.AddVertexInput("mKeyMatrix");
+    //    animMotion.AddVertexInput("mWorldViewProjMatrix");
+    //    animMotion.AddVertexInput("mLightDirection");
+    //    animMotion.AddVertexInput("mCameraEye");
+    //    animMotion.AddPixelInput("mTexture0");
+    //    animMotion.AddPixelInput("mTexture1");
+    //    animMotion.AddPixelInput("mTexture2");
+    //    animMotion.AddPixelInput("mTexture3");
+    //    animMotion.AddPixelInput("mLightAmbient");
+    //    animMotion.AddPixelInput("mLightDiffuse");
+    //    printf("AnimMotion: %d\n", SUCCEEDED(animMotion.CreateFromFile("AnimMotion", "Shaders\\Flow.vs.fx", "Shaders\\Flow.ps.fx")));
+    //}
 
 
     std::vector<XSkinMesh*> vSkin = {};
     XLoader::GXDSkin2Loader skin2;
     XSkinMesh hair, face, body, arm, foot;
     {
-        skin2.Load("SObject\\TwelveSky2\\C001001001.SOBJECT", &hair);
-        skin2.Load("SObject\\TwelveSky2\\C001002001.SOBJECT", &face);
+    //    skin2.Load("SObject\\TwelveSky2\\C001001001.SOBJECT", &hair);
+    //    skin2.Load("SObject\\TwelveSky2\\C001002001.SOBJECT", &face);
     //    skin2.Load("SObject\\TwelveSky2\\C001003001.SOBJECT", &body);
     //    skin2.Load("SObject\\TwelveSky2\\C001004001.SOBJECT", &foot);
-        skin2.Load("SObject\\TwelveSky2GXCW\\A001001038.SOBJECT", &body);//costume
+    //    skin2.Load("SObject\\TwelveSky2GXCW\\A001001039.SOBJECT", &body);//costume
+
+    //    skin2.Load("SObject\\TwelveSky1\\C001001015.SOBJECT", &hair);
+    //    skin2.Load("SObject\\TwelveSky1\\C001002006.SOBJECT", &face);
+    //    skin2.Load("SObject\\TwelveSky1\\C001003001.SOBJECT", &body);
+    //    skin2.Load("SObject\\TwelveSky1\\C001004015.SOBJECT", &foot);
+
+        skin2.Load("SObject\\TwelveSky2MaynGames\\C001001002.SOBJECT", &hair);
+        skin2.Load("SObject\\TwelveSky2MaynGames\\C001002002.SOBJECT", &face);
+        skin2.Load("SObject\\TwelveSky2MaynGames\\C001003002.SOBJECT", &body);
+        skin2.Load("SObject\\TwelveSky2MaynGames\\C001004002.SOBJECT", &foot);
 
     //    //skin2.Load( "SObject\\Troy vs Sparta\\FC_102_100_001.SOBJECT", &hair);
     //    skin2.Load("SObject\\Troy vs Sparta\\FC_101_101_001.SOBJECT", &face);
@@ -87,10 +119,20 @@ int WINAPI WinMain(
     XLoader::GXDMotionLoader motion;
     XAnimationMotion anim;
     {
+        //2.0
         //C00?001002 - Level Idle
         //C00?001078 - Master Idle
         //C00?001085 - God Idle
-        printf("motion: %d\n", motion.Load("Motion\\C001001085.MOTION", &anim));
+        //printf("motion: %d\n", motion.Load("Motion\\C001001085.MOTION", &anim));
+        //printf("motion: %d\n", motion.Load("Motion\\C001001002.MOTION", &anim));
+
+        //2.0
+        //printf("motion: %d\n", motion.Load("Motion\\TwelveSky2MaynGames\\C001001085.MOTION", &anim));
+        //printf("motion: %d\n", motion.Load("Motion\\C001001002.MOTION", &anim));
+        
+        //1.0
+        //printf("motion: %d\n", motion.Load("Motion\\TwelveSky1\\C001001001.MOTION", &anim));
+        //printf("motion: %d\n", motion.Load("Motion\\TwelveSky1\\C001001002.MOTION", &anim));
     }
 
 

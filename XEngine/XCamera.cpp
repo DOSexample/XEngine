@@ -68,6 +68,11 @@ void XCamera::Update()
     device->SetTransform(D3DTS_VIEW, &mViewMatrix);
 }
 
+const D3DXVECTOR3 XCamera::GetEye()
+{
+    return mCameraEye;
+}
+
 void XCamera::SetEye(float x, float y, float z)
 {
     mCameraEye = D3DXVECTOR3(x, y, z);

@@ -5,8 +5,11 @@
 
 #include "XDevice.h"
 
+#include <fstream>
+
 using namespace XSystem::IO;
 
+static int s_TextureID = 0;
 namespace {
 	BOOL IsDXT(D3DFORMAT format)
 	{
@@ -48,7 +51,7 @@ void XTexture::Free()
 	}
 }
 
-bool XTexture::Load(BinaryReader& br)
+bool XTexture::Load(BinaryReader& br, const char* name)
 {
 	mFileDataSize = br.ReadInt();
 	if (mFileDataSize < 1) return true;
@@ -71,6 +74,13 @@ bool XTexture::Load(BinaryReader& br)
 	D3DFORMAT format = mTextureInfo.Format;
 
 	printf("width: %d, height: %d, Alpha: %d \r\n", width, height, mAlphaModeCase );
+
+	//for export texture to file
+	//char texName[256];
+	//sprintf(texName, "Tex_%s_%d.dds", name, s_TextureID++);
+	//std::ofstream fs( texName, std::ios::out | std::ios::binary | std::ios::app);
+	//fs.write((const char*)mFileData, mFileDataSize);
+	//fs.close();
 
 	if ( IsDXT(format) && XDevice::Instance().CreateTexture(mFileData, mFileDataSize, width, height, 0, 0, format, D3DPOOL_MANAGED, 1, 1, 0, 0, 0, &mTexture) )
 		mCheckValidState = true;

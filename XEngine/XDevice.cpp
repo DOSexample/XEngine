@@ -8,12 +8,21 @@ LPDIRECT3DDEVICE9 m_pDevice = nullptr;
 D3DCAPS9 m_Caps;
 
 IDirect3DVertexDeclaration9* mDECLForSKIN = nullptr;
+IDirect3DVertexDeclaration9* mDECLForSKIN1 = nullptr;
 IDirect3DVertexDeclaration9* mDECLForSKIN2 = nullptr;
 IDirect3DVertexDeclaration9* mDECLForSKIN2SHADOW = nullptr;
 D3DVERTEXELEMENT9 mVertexElementForSKIN[] = {
     {0,  0, D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_POSITION,           0},
     {0, 12, D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_NORMAL,             0},
     {0, 24, D3DDECLTYPE_FLOAT2, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD,           0},
+    D3DDECL_END()
+};
+D3DVERTEXELEMENT9 mVertexElementForSKIN1[] = {
+    {0,  0, D3DDECLTYPE_FLOAT3,     D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_POSITION,       0},
+    {0, 12, D3DDECLTYPE_FLOAT3,     D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_NORMAL,         0},
+    {0, 24, D3DDECLTYPE_FLOAT2,     D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD,       0},
+    {0, 32, D3DDECLTYPE_FLOAT4,     D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_BLENDWEIGHT,    0},
+    {0, 48, D3DDECLTYPE_D3DCOLOR,   D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_BLENDINDICES,   0},
     D3DDECL_END()
 };
 D3DVERTEXELEMENT9 mVertexElementForSKIN2[] = {
@@ -44,6 +53,8 @@ XDevice::XDevice()
 
 XDevice::~XDevice()
 {
+    SAFE_RELEASE( mDECLForSKIN );
+    SAFE_RELEASE( mDECLForSKIN1 );
     SAFE_RELEASE( mDECLForSKIN2 );
     SAFE_RELEASE( m_pDevice );
     SAFE_RELEASE( m_D3D );
@@ -126,7 +137,7 @@ bool XDevice::Initialize(void* hWnd, int width, int height)
         m_pDevice->SetLight( 0, &mLight );
     }
 
-    return CreateVertexDeclaration();
+    return m_pDevice && CreateVertexDeclaration();
 }
 
 void XDevice::Clear(ClearType clearType, ColorType colorType, float z, DWORD Stencil)
@@ -192,6 +203,11 @@ D3DXMATRIX XDevice::GetPerspectiveMatrix()
     return *mMainCamera->GetPerspectiveMatrix();
 }
 
+XCamera* XDevice::GetCamera()
+{
+    return mMainCamera;
+}
+
 void XDevice::SetCamera(XCamera* cam)
 {
     mMainCamera = cam;
@@ -204,12 +220,28 @@ const D3DLIGHT9 XDevice::GetDefaultLight()
 
 BOOL XDevice::CreateVertexDeclaration()
 {
-    return SUCCEEDED( m_pDevice->CreateVertexDeclaration( mVertexElementForSKIN2, &mDECLForSKIN2 ) );
+    return 
+        SUCCEEDED( m_pDevice->CreateVertexDeclaration( mVertexElementForSKIN, &mDECLForSKIN ) ) &&
+        SUCCEEDED( m_pDevice->CreateVertexDeclaration( mVertexElementForSKIN1, &mDECLForSKIN1 ) ) &&
+        SUCCEEDED( m_pDevice->CreateVertexDeclaration( mVertexElementForSKIN2, &mDECLForSKIN2 ) );
 }
 
-BOOL XDevice::SetVertexDeclaration()
+BOOL XDevice::SetVertexDeclaration( VertexDeclaretion vtx )
 {
-    return SUCCEEDED( m_pDevice->SetVertexDeclaration( mDECLForSKIN2 ) );
+    switch ( vtx )
+    {
+
+    case VertexDeclaretion::VNT:
+        return SUCCEEDED( m_pDevice->SetVertexDeclaration( mDECLForSKIN ) );
+
+    case VertexDeclaretion::VNT_AND_BLEND:
+        return SUCCEEDED( m_pDevice->SetVertexDeclaration( mDECLForSKIN1 ) );
+    
+    case VertexDeclaretion::ALL:
+        return SUCCEEDED( m_pDevice->SetVertexDeclaration( mDECLForSKIN2 ) );
+
+    }
+    return FALSE;
 }
 
 BOOL XDevice::CreateTexture(
