@@ -6,6 +6,7 @@
 #include "XAnimation/XAnimationMotion.h"
 #include "XLoader/GXDSkin2Loader.h"
 #include "XLoader/GXDMotionLoader.h"
+//#include "XPostProcess.h"
 
 #include <string>
 
@@ -61,8 +62,9 @@ int WINAPI WinMain(
     {
         skin2.Load("SObject\\TwelveSky2\\C001001001.SOBJECT", &hair);
         skin2.Load("SObject\\TwelveSky2\\C001002001.SOBJECT", &face);
-        skin2.Load("SObject\\TwelveSky2\\C001003001.SOBJECT", &body);
-        skin2.Load("SObject\\TwelveSky2\\C001004001.SOBJECT", &foot);
+    //    skin2.Load("SObject\\TwelveSky2\\C001003001.SOBJECT", &body);
+    //    skin2.Load("SObject\\TwelveSky2\\C001004001.SOBJECT", &foot);
+        skin2.Load("SObject\\TwelveSky2GXCW\\A001001038.SOBJECT", &body);//costume
 
     //    //skin2.Load( "SObject\\Troy vs Sparta\\FC_102_100_001.SOBJECT", &hair);
     //    skin2.Load("SObject\\Troy vs Sparta\\FC_101_101_001.SOBJECT", &face);
@@ -91,6 +93,11 @@ int WINAPI WinMain(
         printf("motion: %d\n", motion.Load("Motion\\C001001085.MOTION", &anim));
     }
 
+
+    //XPostProcess xFilter;
+    //{
+    //    xFilter.Setup("Shaders\\PostProcessing\\Filter.fx");
+    //}
 
     float oneFrame = 0.033f * 0.1f;
     MSG msg = { 0, 0 };
@@ -127,6 +134,7 @@ int WINAPI WinMain(
                     //(*it)->Draw();
                 }
             }
+            //xFilter.Draw(xWin32.GetWidth(), xWin32.GetHeight());
             xEngine.EndScene();
         }
     }
@@ -144,5 +152,5 @@ int main(int argc, char** argv)
             arg += " ";
     }
 
-    return WinMain( (HINSTANCE)NULL, (HINSTANCE)NULL, (LPSTR)arg.data(), SW_SHOWDEFAULT );
+    return WinMain( (HINSTANCE)'0', (HINSTANCE)'0', (LPSTR)arg.data(), SW_SHOWDEFAULT);
 }

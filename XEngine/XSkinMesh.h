@@ -70,6 +70,8 @@ struct SkinData2
 	XTexture mDiffuseMap;
 	XTexture mNormalMap;
 	XTexture mSpecularMap;
+	XTexture mAlbedoMap;
+	bool mRequireAlbedoMap;
 	std::vector<XTexture> mAnimationMap;
 };
 

@@ -201,6 +201,12 @@ void XShader::Set(ShaderType shadertype, ShaderSetType setType, const char* name
 		if( desc )
 			device->SetTexture( desc->RegisterIndex, (XTexture*)pSrcData );
 		break;
+	case ShaderSetType::SetInt:
+		constantTable->SetInt( real_device, handle, *((INT*)( pSrcData )) );
+		break;
+	case ShaderSetType::SetIntArray:
+		constantTable->SetIntArray( real_device, handle, ((const INT*)( pSrcData )), count );
+		break;
 	case ShaderSetType::SetFloat:
 		constantTable->SetFloat( real_device, handle, *((FLOAT*)( pSrcData )) );
 		break;

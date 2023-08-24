@@ -13,6 +13,8 @@ enum class ShaderType
 enum class ShaderSetType
 {
 	SetTexture,
+	SetInt,
+	SetIntArray,
 	SetFloat,
 	SetFloatArray,
 	SetMatrix,

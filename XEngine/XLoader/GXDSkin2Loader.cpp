@@ -3,11 +3,13 @@
 
 #include "FileLoader.h"
 #include "../XSystem/IO/Zlib.h"
+#include "../XSystem/Encryption/XXTea.h"
 
 #include "../XEngine.h"
 #include "../XSkinMesh.h"
 
 using namespace XSystem::IO;
+using namespace XSystem::Encryption;
 
 void DebugA(const char* _Format,...)
 {
@@ -44,6 +46,11 @@ namespace {
 		if (!s.mSpecularMap.Load(br))
 		{
 			DebugA("<< !LoadSkin2Texture::mSpecularMap()\r\n");
+			return false;
+		}
+		if (s.mRequireAlbedoMap && !s.mAlbedoMap.Load(br))
+		{
+			DebugA("<< !LoadSkin2Texture::mAlbedoMap()\r\n");
 			return false;
 		}
 
@@ -165,20 +172,88 @@ namespace {
 /// </summary>
 namespace {
 
-	bool LoadSkin2Extra(BinaryReader& br, bool& tValid, bool& tCompressed)
+	bool LoadSkin2Extra(BinaryReader& br, bool& tValid, char& tCompressed)
 	{
 		char tBuffer[4];
-		return br.ReadBytes( tBuffer, sizeof(tBuffer) ) && ( tValid = tBuffer[0] > 0, tCompressed = tBuffer[1] > 0 );
+		char* tmp = br.ReadBytes( tBuffer, sizeof(tBuffer) );
+
+		if (!tmp)
+			return false;
+
+		tValid = tBuffer[0] > 0;
+		tCompressed = tBuffer[1];
+
+		return true;
 	}
-	bool LoadSkin2Header(BinaryReader& br, int* tVersion)
+	bool LoadSkin2Header(BinaryReader& br, int& tVersion, bool& isXXTEA)
 	{
+		isXXTEA = false;
 		char tBuffer[12];
+		memset(tBuffer, 0, sizeof(tBuffer));
 
-		return br.ReadString(tBuffer, 8) && strncmp("SOBJECT", tBuffer, 7) == 0 && ( ( *tVersion = tBuffer[7] - '0' ), *tVersion == 2 || *tVersion == 3 );
+		char* tmp = br.ReadString(tBuffer, 8);
+		if (!tmp)
+			return false;
+
+		if (strncmp("SOBJECT", tBuffer, 7) == 0)
+		{
+			tVersion = tBuffer[7] - '0';
+			if (tVersion == 2 || tVersion == 3)
+				return true;
+		}
+		else if (strncmp("XXTEA111", tBuffer, 8) == 0)
+		{
+			tVersion = 4;
+			isXXTEA = true;
+			return true;
+		}
+		else if (strncmp("XXTEA222", tBuffer, 8) == 0)
+		{
+			tVersion = 5;
+			isXXTEA = true;
+			return true;
+		}
+
+		return false;
 	}
 
-	bool LoadSkin2UncompressedChunk(SkinVersion2* s, BinaryReader& br)
+	bool CheckXXTEA(BinaryReader& br)
 	{
+		unsigned int xxteaData[2] = { br.ReadUInt(), br.ReadUInt() };
+		if (XXTea::Excute(XXTea::Type::Decrypt, xxteaData, 2))
+		{
+			int tOriginalSize = (int)xxteaData[0];
+			int tCompressSize = (int)xxteaData[1];
+
+			size_t offset = br.GetCurrentOffset() - 8;
+			//set offset back to current-8
+			br.SetCurrentOffset( offset );
+
+			//set buffer to tOriginalSize and tCompressSize
+			br.SetBuffer( &tOriginalSize, sizeof(int), offset );
+			br.SetBuffer( &tCompressSize, sizeof(int), offset+4 );
+
+			printf("%d : %d\n", tOriginalSize, tCompressSize);
+
+			return true;
+		}
+
+		return false;
+	}
+
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <param name="s"></param>
+	/// <param name="br"></param>
+	/// <param name="isXXTEA"> = for XXTEA</param>
+	/// <param name="tRequireAlbedoMap"> = for XXTEA222</param>
+	/// <returns></returns>
+	bool LoadSkin2UncompressedChunk(SkinVersion2* s, BinaryReader& br, bool isXXTEA = false, bool tRequireAlbedoMap = false)
+	{
+		if (isXXTEA && !CheckXXTEA(br))
+			return false;
+
 		bool result = false;
 		int mSkinNum = br.ReadInt();
 		if (mSkinNum > 0)
@@ -186,6 +261,7 @@ namespace {
 			s->mSkin.resize(mSkinNum);
 			for (int i = 0; i < mSkinNum; i++)
 			{
+				s->mSkin[i].mRequireAlbedoMap = tRequireAlbedoMap;
 				result = LoadSkinData2(br, s->mSkin[i]);
 				if (!result)
 					break;
@@ -197,8 +273,19 @@ namespace {
 		return result;
 	}
 
-	bool LoadSkin2CompressChunk(SkinVersion2* s, BinaryReader& br)
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <param name="s"></param>
+	/// <param name="br"></param>
+	/// <param name="isXXTEA"> = for XXTEA111 or XXTEA222</param>
+	/// <param name="tRequireAlbedoMap"> = for XXTEA222</param>
+	/// <returns></returns>
+	bool LoadSkin2CompressChunk(SkinVersion2* s, BinaryReader& br, bool isXXTEA = false, bool tRequireAlbedoMap = false)
 	{
+		if (isXXTEA && !CheckXXTEA(br))
+			return false;
+
 		Zlib z( br );
 		if (!Zlib::Decompress(z))
 		{
@@ -214,6 +301,7 @@ namespace {
 			s->mSkin.resize(mSkinNum);
 			for (int i = 0; i < mSkinNum; i++)
 			{
+				s->mSkin[i].mRequireAlbedoMap = tRequireAlbedoMap;
 				result = LoadSkinData2(sub, s->mSkin[i]);
 				if (!result)
 					break;
@@ -246,14 +334,18 @@ namespace XLoader {
 		}
 		
 		int tVersion;
+		bool tValid = false;
+		char tCompressed = '0';
+		bool tHasAlbedo = false;
+		bool isXXTEA = false;
+
 		BinaryReader br( &data, 0, data.size() );
-		if (!LoadSkin2Header(br, &tVersion))
+		if (!LoadSkin2Header(br, tVersion, isXXTEA))
 		{
 			DebugA("%s << !LoadSkin2Header()\r\n", tFileName);
 			return result;
 		}
 
-		bool tValid = false, tCompressed = false;
 		switch ( tVersion )
 		{
 		case 2://Troy vs Sparta | Waren Story
@@ -265,16 +357,31 @@ namespace XLoader {
 				DebugA("%s << !LoadSkin2Extra()\r\n", tFileName);
 			}
 			break;
+		case 4://TwelveSky2GXCW - XXTEA111
+			if (!LoadSkin2Extra(br, tValid, tCompressed))
+			{
+				DebugA("%s << !LoadSkin2Extra()\r\n", tFileName);
+				break;
+			}
+			break;
+		case 5://TwelveSky2GXCW - XXTEA222 (Albedo Texture)
+			if (!LoadSkin2Extra(br, tValid, tCompressed))
+			{
+				DebugA("%s << !LoadSkin2Extra()\r\n", tFileName);
+				break;
+			}
+			tHasAlbedo = true;
+			break;
 		}
 
 		if (tValid)
 		{
 			skin->v2 = new SkinVersion2();
-			if (tCompressed) {
-				result = LoadSkin2CompressChunk(skin->v2, br);
+			if (tCompressed != '0') {
+				result = LoadSkin2CompressChunk(skin->v2, br, isXXTEA, tHasAlbedo);
 			}
 			else {
-				result = LoadSkin2UncompressedChunk(skin->v2, br);
+				result = LoadSkin2UncompressedChunk(skin->v2, br, isXXTEA, tHasAlbedo);
 			}
 			skin->Create2(result);
 

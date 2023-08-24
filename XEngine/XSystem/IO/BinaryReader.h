@@ -34,6 +34,18 @@ namespace XSystem {
 
 			char* ReadString(char* pOut, int count);
 
+			size_t GetCurrentOffset() { return m_CurOffset; }
+
+			void SetCurrentOffset(size_t offset)
+			{
+				m_CurOffset = offset;
+			}
+
+			void SetBuffer(void* pSrc, int count, size_t offset)
+			{
+				memcpy( &m_CurData->data()[offset], pSrc, count );
+			}
+
 		private:
 			size_t m_CurOffset = 0;
 			size_t m_MaxSize = 0;

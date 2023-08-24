@@ -3,6 +3,7 @@
 #include <map>
 #include <vector>
 
+struct D3DXVECTOR3;
 struct D3DXMATRIX;
 
 class XAnimationMotion

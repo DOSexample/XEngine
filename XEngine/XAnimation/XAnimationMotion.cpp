@@ -13,11 +13,11 @@ XAnimationMotion::XAnimationMotion()
 
 XAnimationMotion::~XAnimationMotion()
 {
-	if (!mMatrixKey.empty())
-		for (int i = 0; i < (int)mMatrixKey.size(); ++i)
-			for(int j = 0; j < (int)mMatrixKey[i].size(); ++j)
-				if(mMatrixKey[i][j])
-					delete mMatrixKey[i][j];
+	//if (!mMatrixKey.empty())
+	//	for (int i = 0; i < (int)mMatrixKey.size(); ++i)
+	//		for(int j = 0; j < (int)mMatrixKey[i].size(); ++j)
+	//			if(mMatrixKey[i][j])
+	//				delete mMatrixKey[i][j];
 	mMatrixKey.clear();
 }
 

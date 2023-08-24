@@ -454,6 +454,11 @@ HRESULT XDevice::GetVertexShader(IDirect3DVertexShader9** ppShader)
     return m_pDevice->GetVertexShader( ppShader );
 }
 
+HRESULT XDevice::SetVertexShaderConstantF( UINT StartRegister, CONST float* pConstantData, UINT Vector4fCount )
+{
+    return m_pDevice->SetVertexShaderConstantF( StartRegister, pConstantData, Vector4fCount );
+}
+
 //XMETHOD(SetVertexShaderConstantF)(THIS_ UINT StartRegister, CONST float* pConstantData, UINT Vector4fCount) PURE;
 //XMETHOD(GetVertexShaderConstantF)(THIS_ UINT StartRegister, float* pConstantData, UINT Vector4fCount) PURE;
 //XMETHOD(SetVertexShaderConstantI)(THIS_ UINT StartRegister, CONST int* pConstantData, UINT Vector4iCount) PURE;

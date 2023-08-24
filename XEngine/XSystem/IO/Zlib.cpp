@@ -8,6 +8,9 @@ namespace XSystem {
 	namespace IO {
 
 		Zlib::Zlib()
+			:
+			m_OriginalSize(0),
+			m_CompressSize(0)
 		{
 		}
 

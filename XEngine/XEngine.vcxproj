@@ -149,9 +149,11 @@
     <ClInclude Include="XLoader\FileLoader.h" />
     <ClInclude Include="XLoader\GXDMotionLoader.h" />
     <ClInclude Include="XLoader\GXDSkin2Loader.h" />
+    <ClInclude Include="XPostProcess.h" />
     <ClInclude Include="XRenderState.h" />
     <ClInclude Include="XShader.h" />
     <ClInclude Include="XSkinMesh.h" />
+    <ClInclude Include="XSystem\Encryption\XXTea.h" />
     <ClInclude Include="XSystem\IO\BinaryReader.h" />
     <ClInclude Include="XSystem\IO\Zlib.h" />
     <ClInclude Include="XTexture.h" />
@@ -167,6 +169,7 @@
     <ClCompile Include="XLoader\FileLoader.cpp" />
     <ClCompile Include="XLoader\GXDMotionLoader.cpp" />
     <ClCompile Include="XLoader\GXDSkin2Loader.cpp" />
+    <ClCompile Include="XPostProcess.cpp" />
     <ClCompile Include="XRenderState.cpp" />
     <ClCompile Include="XShader.cpp" />
     <ClCompile Include="XSkinMesh.cpp" />

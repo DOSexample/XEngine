@@ -170,7 +170,7 @@ public:
     HRESULT CreateVertexShader( CONST DWORD* pFunction, IDirect3DVertexShader9** ppShader );
     HRESULT SetVertexShader( IDirect3DVertexShader9* pShader );
     HRESULT GetVertexShader( IDirect3DVertexShader9** ppShader );
-    XMETHOD(SetVertexShaderConstantF)(THIS_ UINT StartRegister, CONST float* pConstantData, UINT Vector4fCount) PURE;
+    HRESULT SetVertexShaderConstantF(THIS_ UINT StartRegister, CONST float* pConstantData, UINT Vector4fCount ) PURE;
     XMETHOD(GetVertexShaderConstantF)(THIS_ UINT StartRegister, float* pConstantData, UINT Vector4fCount) PURE;
     XMETHOD(SetVertexShaderConstantI)(THIS_ UINT StartRegister, CONST int* pConstantData, UINT Vector4iCount) PURE;
     XMETHOD(GetVertexShaderConstantI)(THIS_ UINT StartRegister, int* pConstantData, UINT Vector4iCount) PURE;

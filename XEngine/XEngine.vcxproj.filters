@@ -28,6 +28,9 @@
     <Filter Include="Source Files\XAnimation">
       <UniqueIdentifier>{03ffc058-23b7-4823-9d73-c59034c37405}</UniqueIdentifier>
     </Filter>
+    <Filter Include="XSystem\Encryption">
+      <UniqueIdentifier>{042dc7b8-e462-4df6-8e25-908ac96b07fd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="XEngine.h">
@@ -74,6 +77,12 @@
     </ClInclude>
     <ClInclude Include="XLoader\GXDMotionLoader.h">
       <Filter>XLoader</Filter>
+    </ClInclude>
+    <ClInclude Include="XPostProcess.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="XSystem\Encryption\XXTea.h">
+      <Filter>XSystem\Encryption</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -124,6 +133,9 @@
     </ClCompile>
     <ClCompile Include="XLoader\GXDMotionLoader.cpp">
       <Filter>XLoader</Filter>
+    </ClCompile>
+    <ClCompile Include="XPostProcess.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
