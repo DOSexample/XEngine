@@ -153,7 +153,7 @@ while (msg.message != WM_QUIT)
 ```
 
 Troy vs Sparta
-![Alt text](/Screenshot_TroySparta.png?raw=true "Troy vs Spartar
+![Alt text](/Screenshot_TroySparta.png?raw=true "Troy vs Spartar)
 
 Waren Story
 ![Alt text](/Screenshot_WS.png?raw=true "Waren Story")
