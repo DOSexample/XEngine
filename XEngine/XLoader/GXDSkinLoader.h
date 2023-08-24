@@ -5,10 +5,10 @@ class XSkinMesh;
 namespace XLoader {
 
 
-	class GXDSkin2Loader
+	class GXDSkinLoader
 	{
 	public:
-		GXDSkin2Loader();
+		GXDSkinLoader();
 
 		bool Load( const char* tFileName, XSkinMesh* mSkin );
 

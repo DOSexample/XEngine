@@ -360,7 +360,7 @@ void XSkinMesh::Draw(XAnimationMotion* anim)
                     //device->SetRenderState( D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA );
                     break;
                 }
-                rt.Apply2(this, xs, xa, pDiffuseMap, pNormalMap, pSpecularMap, pFlowMap);
+                rt.Apply(this, xs, xa, pDiffuseMap, pNormalMap, pSpecularMap, pFlowMap);
                 //rp.SetRenderState(&rt);
 
                 //printf("Drawing skin[%d]\n", i);
@@ -474,7 +474,7 @@ void XSkinMesh::Draw(XAnimationMotion* anim)
                         //device->SetRenderState( D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA );
                         break;
                     }
-                    rt.Apply2(this, xs, xa, pDiffuseMap, pNormalMap, pSpecularMap, pFlowMap);
+                    rt.Apply(this, xs, xa, pDiffuseMap, pNormalMap, pSpecularMap, pFlowMap);
                     ////rp.SetRenderState(&rt);
                     
                     //printf("Drawing skin[%d].lod[%d]\n", i, j);

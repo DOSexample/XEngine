@@ -2,7 +2,7 @@
 
 #include "XDevice.h"
 
-#include "XLoader/GXDSkin2Loader.h"
+#include "XLoader/GXDSkinLoader.h"
 #include "XLoader/GXDTextureLoader.h"
 
 #include "XTexture.h"

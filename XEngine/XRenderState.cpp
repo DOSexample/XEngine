@@ -21,7 +21,7 @@ XRenderState::XRenderState()
 
 }
 
-void XRenderState::Apply2(XTransform* transform, XShader* xs, XAnimationMotion* anim, XTexture* pDiffuseMap, XTexture* pNormalMap, XTexture* pSpecularMap, XTexture* pFlowMap) {
+void XRenderState::Apply(XTransform* transform, XShader* xs, XAnimationMotion* anim, XTexture* pDiffuseMap, XTexture* pNormalMap, XTexture* pSpecularMap, XTexture* pFlowMap) {
     auto device = &XDevice::Instance();
 
     // Depth test

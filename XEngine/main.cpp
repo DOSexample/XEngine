@@ -4,7 +4,7 @@
 #include "XSkinMesh.h"
 #include "XShader.h"
 #include "XAnimation/XAnimationMotion.h"
-#include "XLoader/GXDSkin2Loader.h"
+#include "XLoader/GXDSkinLoader.h"
 #include "XLoader/GXDMotionLoader.h"
 //#include "XPostProcess.h"
 
@@ -79,35 +79,35 @@ int WINAPI WinMain(
 
 
     std::vector<XSkinMesh*> vSkin = {};
-    XLoader::GXDSkin2Loader skin2;
+    XLoader::GXDSkinLoader skin;
     XSkinMesh hair, face, body, arm, foot;
     {
-    //    skin2.Load("SObject\\TwelveSky2\\C001001001.SOBJECT", &hair);
-    //    skin2.Load("SObject\\TwelveSky2\\C001002001.SOBJECT", &face);
-    //    skin2.Load("SObject\\TwelveSky2\\C001003001.SOBJECT", &body);
-    //    skin2.Load("SObject\\TwelveSky2\\C001004001.SOBJECT", &foot);
-    //    skin2.Load("SObject\\TwelveSky2GXCW\\A001001039.SOBJECT", &body);//costume
+    //    skin.Load("SObject\\TwelveSky2\\C001001001.SOBJECT", &hair);
+    //    skin.Load("SObject\\TwelveSky2\\C001002001.SOBJECT", &face);
+    //    skin.Load("SObject\\TwelveSky2\\C001003001.SOBJECT", &body);
+    //    skin.Load("SObject\\TwelveSky2\\C001004001.SOBJECT", &foot);
+    //    skin.Load("SObject\\TwelveSky2GXCW\\A001001039.SOBJECT", &body);//costume
 
-    //    skin2.Load("SObject\\TwelveSky1\\C001001015.SOBJECT", &hair);
-    //    skin2.Load("SObject\\TwelveSky1\\C001002006.SOBJECT", &face);
-    //    skin2.Load("SObject\\TwelveSky1\\C001003001.SOBJECT", &body);
-    //    skin2.Load("SObject\\TwelveSky1\\C001004015.SOBJECT", &foot);
+    //    skin.Load("SObject\\TwelveSky1\\C001001015.SOBJECT", &hair);
+    //    skin.Load("SObject\\TwelveSky1\\C001002006.SOBJECT", &face);
+    //    skin.Load("SObject\\TwelveSky1\\C001003001.SOBJECT", &body);
+    //    skin.Load("SObject\\TwelveSky1\\C001004015.SOBJECT", &foot);
 
-        skin2.Load("SObject\\TwelveSky2MaynGames\\C001001002.SOBJECT", &hair);
-        skin2.Load("SObject\\TwelveSky2MaynGames\\C001002002.SOBJECT", &face);
-        skin2.Load("SObject\\TwelveSky2MaynGames\\C001003002.SOBJECT", &body);
-        skin2.Load("SObject\\TwelveSky2MaynGames\\C001004002.SOBJECT", &foot);
+        skin.Load("SObject\\TwelveSky2MaynGames\\C001001002.SOBJECT", &hair);
+        skin.Load("SObject\\TwelveSky2MaynGames\\C001002002.SOBJECT", &face);
+        skin.Load("SObject\\TwelveSky2MaynGames\\C001003002.SOBJECT", &body);
+        skin.Load("SObject\\TwelveSky2MaynGames\\C001004002.SOBJECT", &foot);
 
-    //    //skin2.Load( "SObject\\Troy vs Sparta\\FC_102_100_001.SOBJECT", &hair);
-    //    skin2.Load("SObject\\Troy vs Sparta\\FC_101_101_001.SOBJECT", &face);
-    //    skin2.Load("SObject\\Troy vs Sparta\\FC_W_103_101_001.SOBJECT", &hair);//helmet
-    //    skin2.Load("SObject\\Troy vs Sparta\\FC_W_104_102_001.SOBJECT", &body);
-    //    skin2.Load("SObject\\Troy vs Sparta\\FC_W_105_101_001.SOBJECT", &arm);//arm
-    //    skin2.Load("SObject\\Troy vs Sparta\\FC_W_106_101_001.SOBJECT", &foot);
+    //    //skin.Load( "SObject\\Troy vs Sparta\\FC_102_100_001.SOBJECT", &hair);
+    //    skin.Load("SObject\\Troy vs Sparta\\FC_101_101_001.SOBJECT", &face);
+    //    skin.Load("SObject\\Troy vs Sparta\\FC_W_103_101_001.SOBJECT", &hair);//helmet
+    //    skin.Load("SObject\\Troy vs Sparta\\FC_W_104_102_001.SOBJECT", &body);
+    //    skin.Load("SObject\\Troy vs Sparta\\FC_W_105_101_001.SOBJECT", &arm);//arm
+    //    skin.Load("SObject\\Troy vs Sparta\\FC_W_106_101_001.SOBJECT", &foot);
     //
-    //    skin2.Load("SObject\\WarenStory\\C001002001.SOBJECT", &hair);
-    //    skin2.Load("SObject\\WarenStory\\C001003001.SOBJECT", &face);
-    //    skin2.Load("SObject\\WarenStory\\C001008001.SOBJECT", &body);
+    //    skin.Load("SObject\\WarenStory\\C001002001.SOBJECT", &hair);
+    //    skin.Load("SObject\\WarenStory\\C001003001.SOBJECT", &face);
+    //    skin.Load("SObject\\WarenStory\\C001008001.SOBJECT", &body);
 
         vSkin.push_back(&hair);
         vSkin.push_back(&face);

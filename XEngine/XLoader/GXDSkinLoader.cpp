@@ -1,4 +1,4 @@
-#include "GXDSkin2Loader.h"
+#include "GXDSkinLoader.h"
 #include "GXDTextureLoader.h"
 
 #include "FileLoader.h"
@@ -515,11 +515,11 @@ namespace {
 
 namespace XLoader {
 
-	GXDSkin2Loader::GXDSkin2Loader()
+	GXDSkinLoader::GXDSkinLoader()
 	{
 	}
 
-	bool GXDSkin2Loader::Load(const char* tFileName, XSkinMesh* skin)
+	bool GXDSkinLoader::Load(const char* tFileName, XSkinMesh* skin)
 	{
 		bool result = false;
 		FileLoader f;

@@ -96,7 +96,6 @@ public:
         alphaReferenceValue = value;
     }
 
-    void Apply1(XTransform* transform = 0, XShader* xs = 0, XAnimationMotion* anim = 0, XTexture* pDiffuseMap = 0, XTexture* pNormalMap = 0, XTexture* pSpecularMap = 0, XTexture* pFlowMap = 0);
-    void Apply2(XTransform* transform = 0, XShader* xs = 0, XAnimationMotion* anim = 0, XTexture* pDiffuseMap = 0, XTexture* pNormalMap = 0, XTexture* pSpecularMap = 0, XTexture* pFlowMap = 0);
+    void Apply(XTransform* transform = 0, XShader* xs = 0, XAnimationMotion* anim = 0, XTexture* pDiffuseMap = 0, XTexture* pNormalMap = 0, XTexture* pSpecularMap = 0, XTexture* pFlowMap = 0);
 
 };

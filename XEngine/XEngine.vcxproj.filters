@@ -48,7 +48,7 @@
     <ClInclude Include="XLoader\FileLoader.h">
       <Filter>XLoader</Filter>
     </ClInclude>
-    <ClInclude Include="XLoader\GXDSkin2Loader.h">
+    <ClInclude Include="XLoader\GXDSkinLoader.h">
       <Filter>XLoader</Filter>
     </ClInclude>
     <ClInclude Include="XDevice.h">
@@ -101,7 +101,7 @@
     <ClCompile Include="XLoader\FileLoader.cpp">
       <Filter>XLoader</Filter>
     </ClCompile>
-    <ClCompile Include="XLoader\GXDSkin2Loader.cpp">
+    <ClCompile Include="XLoader\GXDSkinLoader.cpp">
       <Filter>XLoader</Filter>
     </ClCompile>
     <ClCompile Include="main.cpp">

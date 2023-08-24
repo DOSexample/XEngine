@@ -148,7 +148,7 @@
     <ClInclude Include="XEngine.h" />
     <ClInclude Include="XLoader\FileLoader.h" />
     <ClInclude Include="XLoader\GXDMotionLoader.h" />
-    <ClInclude Include="XLoader\GXDSkin2Loader.h" />
+    <ClInclude Include="XLoader\GXDSkinLoader.h" />
     <ClInclude Include="XPostProcess.h" />
     <ClInclude Include="XRenderState.h" />
     <ClInclude Include="XShader.h" />
@@ -168,7 +168,7 @@
     <ClCompile Include="XEngine.cpp" />
     <ClCompile Include="XLoader\FileLoader.cpp" />
     <ClCompile Include="XLoader\GXDMotionLoader.cpp" />
-    <ClCompile Include="XLoader\GXDSkin2Loader.cpp" />
+    <ClCompile Include="XLoader\GXDSkinLoader.cpp" />
     <ClCompile Include="XPostProcess.cpp" />
     <ClCompile Include="XRenderState.cpp" />
     <ClCompile Include="XShader.cpp" />
