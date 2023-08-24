@@ -2,7 +2,7 @@
  
 My C++ D3D9 Renderer Engine
 
-GXDSkin2Loader for TwelveSky2.5, Troy vs Spartar, Waren Story
+GXDSkin2Loader for TwelveSky2.5, TwelveSkyGXCW(XXTEA111,XXTEA222), Troy vs Spartar, Waren Story
 
 1.Create Window
 ```
